@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Post;
+use App\Models\Profile;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -11,12 +13,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('comments', function (Blueprint $table) {
             $table->id();
-            $table->string("username")->unique();
-            $table->string("password");
-            $table->string("email", 255)->unique();
+            $table->text("body");
+            $table->integer("likes")->default(0);
             $table->timestamps();
+            $table->foreignIdFor(Profile::class);
+            $table->foreignIdFor(Post::class);
         });
     }
 
@@ -25,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('comments');
     }
 };

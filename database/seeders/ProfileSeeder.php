@@ -2,7 +2,10 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Comment;
+use App\Models\Post;
+use App\Models\Profile;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class ProfileSeeder extends Seeder
@@ -12,6 +15,11 @@ class ProfileSeeder extends Seeder
      */
     public function run(): void
     {
-        //
+        $users = User::factory()->count(50)->create();
+        foreach ($users as $user) {
+            Profile::factory()->create(["user_id" => $user->id]);
+            Post::factory()->count(random_int(0, 5))->create();
+            Comment::factory()->count(random_int(0, 5))->create();
+        }
     }
 }
