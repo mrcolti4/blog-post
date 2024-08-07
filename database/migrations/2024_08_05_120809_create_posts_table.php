@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\Profile;
+use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -18,7 +18,7 @@ return new class extends Migration
             $table->text("body");
             $table->string("image")->nullable();
             $table->integer("likes")->default(0);
-            $table->foreignIdFor(Profile::class);
+            $table->foreignIdFor(User::class);
             $table->timestamps();
         });
     }

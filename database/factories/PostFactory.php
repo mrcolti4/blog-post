@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Models\Profile;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -18,7 +18,7 @@ class PostFactory extends Factory
     public function definition(): array
     {
         return [
-            "profile_id" => Profile::all()->random(),
+            "user_id" => User::all()->random(),
             "title" => fake()->realTextBetween(10, 100),
             "body" => fake()->realText(),
             "image" => fake()->imageUrl(),
