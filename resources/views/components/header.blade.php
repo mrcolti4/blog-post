@@ -3,16 +3,28 @@
 </div>
 <header data-target="mobile-menu" class="bg-secondary/10 absolute bottom-0 right-0 transition duration-300 translate-x-full md:translate-x-0 md:block md:static">
     <div class="md:flex md:items-center md:max-w-[1000px] md:mx-auto">
-        <a href="/" class="hidden md:block">
-            <x-logo src="{{asset('/images/logo.png')}}"/>
+        <a href="/" class="hidden md:block w-20">
+            <x-logo src="{{asset('/images/logo.svg')}}" class="w-20"/>
         </a>
-        <nav class="w-full">
+        <nav class="w-full inline-flex justify-center items-center">
             <ul class="p-5 md:p-0 grid grid-rows-2 grid-cols-3 gap-8 md:flex items-center justify-center md:gap-6">
                 <x-nav-link href="#">Popular</x-nav-link>
                 <x-nav-link href="#">Latest posts</x-nav-link>
                 <x-nav-link href="#">About</x-nav-link>
-                <x-nav-link href="{{ route('login.create') }}" class="md:ml-20">Login</x-nav-link>
-                <x-nav-link href="{{ route('register.create') }}">Register</x-nav-link>
+                @guest
+                    <x-nav-link href="{{ route('login') }}" class="md:ml-20">Login</x-nav-link>
+                    <x-nav-link href="{{ route('register.create') }}">Register</x-nav-link>
+                @endguest
+                @auth
+                <li class="ml-20">
+                    <x-form.form method="POST" action="/login" class="lg:w-auto">
+                        @method("DELETE")
+                        <x-form.button class="w-[150px]">
+                            Logout
+                        </x-form>
+                    </x-form>
+                </li>
+                @endauth
             </ul>
         </nav>
     </div>

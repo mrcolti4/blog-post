@@ -9,7 +9,8 @@
   @vite('resources/css/app.css')
   @vite('resources/js/app.js')
 </head>
-<body class="h-full bg-background overflow-hidden font-Mandali">
+<body class="h-full bg-background overflow-hidden font-Mandali text-text">
+    @stack('header')
     @yield("content")
 </body>
 </html>
