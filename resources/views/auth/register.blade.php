@@ -10,7 +10,7 @@
             <x-form.input name="password" type="password" label="Password" placeholder="Enter your password"/>
             <x-form.input name="password_confirmation" type="password" label="Confirm password" placeholder="Enter your password again"/>
             <x-form.button>Sign in</x-form>
-            <x-form.link href="{{ route('login.create') }}">Have an account? Login</x-form>
+            <x-form.link href="{{ route('login') }}">Have an account? Login</x-form>
         </x-form>
     </div>
 @endsection
