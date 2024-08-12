@@ -2,20 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Post;
-use App\Models\User;
 use Illuminate\Http\Request;
 
-class UsersPostsController extends Controller
+class PostsController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index(User $user)
+    public function index()
     {
-        return view("app.user-posts", [
-            "body" => $user->posts
-        ]);
+        //
     }
 
     /**
@@ -23,7 +19,7 @@ class UsersPostsController extends Controller
      */
     public function create()
     {
-        //
+        return view("app.user-post-create");
     }
 
     /**
@@ -31,21 +27,14 @@ class UsersPostsController extends Controller
      */
     public function store(Request $request)
     {
-        //
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(User $user, Post $post)
+    public function show(string $id)
     {
-        if ($user->id !== $post->user_id) {
-            abort("404");
-        }
-
-        return view("app.user-posts-single", [
-            "post" => $post
-        ]);
+        //
     }
 
     /**

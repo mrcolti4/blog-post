@@ -10,7 +10,7 @@
   @vite('resources/css/app.css')
   @vite('resources/js/app.js')
 </head>
-<body class="h-full bg-background overflow-hidden font-Mandali relative">
+<body class="h-full bg-background overflow-hidden font-Mandali relative text-text">
 
     <x-header/>
     @yield("content")

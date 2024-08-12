@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -29,5 +30,12 @@ class SessionController extends Controller
         $request->session()->regenerate();
 
         return to_route("home");
+    }
+
+    public function destroy()
+    {
+        Auth::logout();
+
+        return redirect("/login");
     }
 }

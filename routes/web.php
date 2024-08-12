@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PostsController;
 use App\Http\Controllers\SessionController;
 use App\Http\Controllers\RegisteredController;
 use App\Http\Controllers\UsersController;
@@ -48,6 +49,11 @@ Route::prefix("profile")->group(function () {
     Route::get("/{id}", function ($id) {
         return "Profile by $id";
     });
+});
+
+Route::name("posts.")->prefix("posts")->group(function () {
+    Route::get("/create", [PostsController::class, "create"])->name("create");
+    Route::post("/store", [PostsController::class, "store"])->name("store");
 });
 
 Route::name("users.")->prefix("users")->group(function () {

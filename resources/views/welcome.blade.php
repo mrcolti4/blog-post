@@ -31,20 +31,11 @@
             </div>
         </div>
         <div class="swiper mt-5">
-            <!-- Additional required wrapper -->
             <ul class="swiper-wrapper">
                 @foreach($popular_posts as $post)
                     <x-home.post-card class="swiper-slide" :post="$post"/>
                 @endforeach
             </ul>
-            <!-- If we need pagination -->
-            <div class="swiper-pagination"></div>
-
-            <!-- If we need navigation buttons -->
-
-
-            <!-- If we need scrollbar -->
-            <div class="swiper-scrollbar"></div>
         </div>
     </div>
 </section>
