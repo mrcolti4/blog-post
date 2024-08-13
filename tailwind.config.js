@@ -26,7 +26,10 @@ export default {
             },
             fontFamily: {
                 Mandali: ["Mandali", "sans-serif"],
-                Shantell: ["Shantell", "sans-serif"],
+                Shantell: ["Shantell Sans", "sans-serif"],
+            },
+            gridTemplateColumns: {
+                card: "80px auto",
             },
         },
     },

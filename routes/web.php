@@ -1,8 +1,10 @@
 <?php
 
 use App\Http\Controllers\PostsController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SessionController;
 use App\Http\Controllers\RegisteredController;
+use App\Http\Controllers\UpdatePassword;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\UsersPostsController;
 use App\Models\Post;
@@ -42,25 +44,27 @@ Route::post("/login", [SessionController::class, "store"])->name("login.store");
 Route::delete("/login", [SessionController::class, "destroy"])->name("login.destroy");
 
 
-Route::prefix("profile")->group(function () {
-    Route::get("/", function () {
-        return "My profile";
-    });
-    Route::get("/{id}", function ($id) {
-        return "Profile by $id";
-    });
-});
-
 Route::name("posts.")->prefix("posts")->group(function () {
     Route::get("/create", [PostsController::class, "create"])->name("create");
     Route::post("/store", [PostsController::class, "store"])->name("store");
 });
+
+Route::name("profile.")->prefix("profile")->group(function () {
+    Route::get("/edit", [ProfileController::class, "edit"])->name("edit")->middleware("auth");
+    Route::post("/update", [ProfileController::class, "update"])->name("update")->middleware("auth");
+});
+
+Route::post("/password-update", UpdatePassword::class)->name("password.update");
 
 Route::name("users.")->prefix("users")->group(function () {
     Route::get("/", [UsersController::class, "index"])->name("index");
 
     Route::name("id.")->prefix("{user:username}")->group(function () {
         Route::get("/", [UsersController::class, "show"])->name("show");
+
+        Route::name("profile.")->prefix("profile")->group(function () {
+            Route::get("/", [ProfileController::class, "show"])->name("show");
+        });
 
         Route::name("posts.")->prefix("posts")->group(function () {
             Route::get("/", [UsersPostsController::class, "index"])->name("index");

@@ -1,5 +1,5 @@
 <!doctype html>
-<html class="h-full bg-white">
+<html class="h-full">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,7 +10,7 @@
   @vite('resources/css/app.css')
   @vite('resources/js/app.js')
 </head>
-<body class="h-full bg-background overflow-hidden font-Mandali relative text-text">
+<body class="h-full bg-background font-Mandali relative text-text">
 
     <x-header/>
     @yield("content")

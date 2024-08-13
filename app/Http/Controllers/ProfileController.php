@@ -2,20 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Post;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
+use Redirect;
 
-class UsersPostsController extends Controller
+class ProfileController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index(User $user)
+    public function index()
     {
-        return view("app.user.posts", [
-            "body" => $user->posts
-        ]);
+        //
     }
 
     /**
@@ -37,31 +36,31 @@ class UsersPostsController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(User $user, Post $post)
+    public function show(User $user): View
     {
-        if ($user->id !== $post->user_id) {
-            abort("404");
-        }
-
-        return view("app.user.posts-single", [
-            "post" => $post
+        return view("app.user.profile", [
+            "user" => $user
         ]);
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Request $request, User $user): View
     {
-        //
+        return view("app.user.profile-edit", [
+            "user" => $request->user()
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, string $id): Redirect
     {
-        //
+        dd("update profil");
+
+        return redirect("");
     }
 
     /**
