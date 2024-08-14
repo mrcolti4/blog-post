@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Profile;
 use App\Models\User;
+use Auth;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Redirect;
@@ -49,18 +51,29 @@ class ProfileController extends Controller
     public function edit(Request $request, User $user): View
     {
         return view("app.user.profile-edit", [
-            "user" => $request->user()
+            "user" => Auth::user()
         ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id): Redirect
+    public function update(Request $request)
     {
-        dd("update profil");
+        $attrs = $request->validate([
+            "first_name" => "string|min:2",
+            "last_name" => "string|min:2",
+            "bio" => "string|min:10|max:300"
+        ]);
+        $user = Auth::user();
+        if (empty($user->profile)) {
+            $user->profile()->create($attrs);
+        } else {
+            $user->profile()->update($attrs);
+        }
 
-        return redirect("");
+
+        return back()->with("success", "Your profile successfully updated");
     }
 
     /**

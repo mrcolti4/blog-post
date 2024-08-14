@@ -1,5 +1,9 @@
 @extends('layouts.home')
 
+@section('styles')
+    <link rel="stylesheet" href="{{ asset('css/swiper.css') }}">
+@endsection
+
 @section('content')
 <section class="container mx-auto pt-5">
     @if ($user)
@@ -16,11 +20,26 @@
             <x-user.text>{{$user->profile->bio}}</x-user>
         </x-user>
         <x-user.panel>
-            <x-user.title>Favourite posts</x-user>
+            <x-user.title>Published posts</x-user>
+            <x-user.posts-slider>
+                @forelse($user->posts as $post)
+                    <div class="swiper-slide">
+                        <a href="{{ route('users.id.posts.show', ['user' => $user, 'post'=> $post]) }}">
+                            {{$post->title}}
+                        </a>
+                    </div>
+                    @empty
+                    Not published yet
+                @endforelse
+            </x-user.posts-slider>
         </x-user>
             @else
             <h2>User not found!</h2>
         @endif
     </div>
 </section>
+@endsection
+@section('scripts')
+    <script src="{{ asset('js/swiper-bundle.min.js') }}"></script>
+    <script src="{{ asset('js/profile-slider.js') }}"></script>
 @endsection
