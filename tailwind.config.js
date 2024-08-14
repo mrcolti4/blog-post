@@ -31,6 +31,9 @@ export default {
             gridTemplateColumns: {
                 card: "80px auto",
             },
+            gridTemplateRows: {
+                panel: "40px auto",
+            },
         },
     },
     plugins: [require("@tailwindcss/forms")],

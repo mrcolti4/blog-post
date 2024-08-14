@@ -2,7 +2,7 @@
 
 @section("content")
     <div class="h-full w-full flex justify-center items-center">
-        <x-form.form method="POST" action="/login">
+        <x-form.form method="POST" action="{{ route('register.store') }}">
             <x-form.title>Sign up</x-form>
             <x-form.descr>Start your journey now</x-form>
             <x-form.input name="username" label="Username" placeholder="Enter your username"/>

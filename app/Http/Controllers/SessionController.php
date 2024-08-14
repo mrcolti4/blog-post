@@ -19,7 +19,7 @@ class SessionController extends Controller
     {
         $attrs = $request->validate([
             "username" => ["required"],
-            "password" => ["required"]
+            "password" => ["required"],
         ]);
 
         if (!Auth::attempt($attrs)) {

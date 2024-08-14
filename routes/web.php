@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ForgotPassword;
 use App\Http\Controllers\PostsController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SessionController;
@@ -49,12 +50,24 @@ Route::name("posts.")->prefix("posts")->group(function () {
     Route::post("/store", [PostsController::class, "store"])->name("store");
 });
 
+Route::name("user.")->prefix("user")->group(function () {
+    Route::get("/edit", [UsersController::class, "edit"])->name("edit")->middleware("auth");
+    Route::post("/update", [UsersController::class, "update"])->name("update")->middleware("auth");
+
+    Route::name("password.")->prefix("update-password")->group(function () {
+        Route::post("/", UpdatePassword::class)->name("update");
+    });
+});
+
 Route::name("profile.")->prefix("profile")->group(function () {
     Route::get("/edit", [ProfileController::class, "edit"])->name("edit")->middleware("auth");
     Route::post("/update", [ProfileController::class, "update"])->name("update")->middleware("auth");
 });
 
-Route::post("/password-update", UpdatePassword::class)->name("password.update");
+Route::get("/forgot-password", function () {
+    return view("auth.forgot-password");
+})->name("password.request");
+Route::post("/forgot-password", ForgotPassword::class)->name("password.email");
 
 Route::name("users.")->prefix("users")->group(function () {
     Route::get("/", [UsersController::class, "index"])->name("index");

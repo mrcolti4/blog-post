@@ -30,8 +30,4 @@ class RegisteredController extends Controller
         // redirect
         return redirect()->to("home");
     }
-
-    public function getPost()
-    {
-    }
 }
