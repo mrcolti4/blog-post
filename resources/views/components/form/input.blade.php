@@ -1,4 +1,4 @@
-@props(['name', 'label'])
+@props(['name', 'label', 'tag' => 'input'])
 
 @php
     $defaults = [
@@ -17,5 +17,9 @@
 @endif
 
 <x-form.field :name="$name" :label="$label">
+@if ($tag === 'textarea')
+    <textarea {{$attributes->merge($defaults)}}></textarea>
+@else
     <input {{$attributes->merge($defaults)}} />
+@endif
 </x-form>

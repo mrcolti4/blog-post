@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Comment;
 use App\Models\Post;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -39,13 +40,13 @@ class UsersPostsController extends Controller
      */
     public function show(User $user, Post $post)
     {
-        if ($user->id !== $post->user_id) {
-            abort("404");
-        }
+
+        $comments = Comment::where("post_id", $post->id)->with("user.profile")->orderBy("likes", "desc")->get();
 
         return view("app.user.posts-single", [
             "post" => $post,
-            "images" => $post->images
+            "images" => $post->images,
+            "comments" => $comments
         ]);
     }
 

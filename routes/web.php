@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AddComment;
 use App\Http\Controllers\ForgotPassword;
 use App\Http\Controllers\ImageUpload;
 use App\Http\Controllers\PostsController;
@@ -45,11 +46,10 @@ Route::post("/login", [SessionController::class, "store"])->name("login.store");
 
 Route::delete("/login", [SessionController::class, "destroy"])->name("login.destroy");
 
-
-Route::name("posts.")->prefix("posts")->group(function () {
-    Route::get("/create", [PostsController::class, "create"])->name("create")->middleware("auth");
-    Route::post("/store", [PostsController::class, "store"])->name("store")->middleware("auth");
-});
+Route::get("/forgot-password", function () {
+    return view("auth.forgot-password");
+})->name("password.request");
+Route::post("/forgot-password", ForgotPassword::class)->name("password.email");
 
 Route::name("user.")->prefix("user")->group(function () {
     Route::get("/edit", [UsersController::class, "edit"])->name("edit")->middleware("auth");
@@ -66,10 +66,17 @@ Route::name("profile.")->prefix("profile")->group(function () {
     Route::post("/update", [ProfileController::class, "update"])->name("update")->middleware("auth");
 });
 
-Route::get("/forgot-password", function () {
-    return view("auth.forgot-password");
-})->name("password.request");
-Route::post("/forgot-password", ForgotPassword::class)->name("password.email");
+Route::name("posts.")->prefix("posts")->group(function () {
+    Route::get("/", [UsersPostsController::class, "index"])->name("index");
+    Route::get("/{post}", [UsersPostsController::class, "show"])->name("show");
+    Route::get("/create", [PostsController::class, "create"])->name("create")->middleware("auth");
+    Route::post("/store", [PostsController::class, "store"])->name("store")->middleware("auth");
+
+    Route::name("comments.")->prefix("{post}")->group(function () {
+        Route::post("/store", AddComment::class)->name("store")->middleware("auth");
+    });
+});
+
 
 Route::name("users.")->prefix("users")->group(function () {
     Route::get("/", [UsersController::class, "index"])->name("index");
@@ -79,12 +86,6 @@ Route::name("users.")->prefix("users")->group(function () {
 
         Route::name("profile.")->prefix("profile")->group(function () {
             Route::get("/", [ProfileController::class, "show"])->name("show");
-        });
-
-        Route::name("posts.")->prefix("posts")->group(function () {
-            Route::get("/", [UsersPostsController::class, "index"])->name("index");
-
-            Route::get("/{post}", [UsersPostsController::class, "show"])->name("show");
         });
     });
 });
