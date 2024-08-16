@@ -1,0 +1,47 @@
+/* Основной контейнер редактора */
+.dark-theme-editor .ck.ck-editor__main > .ck-editor__editable {
+    background: #2b2b2b;
+    color: #ffffff;
+}
+
+.ck.ck-editor {
+    height: 300px;
+}
+
+.ck.ck-editor__main,
+.ck.ck-editor__main .ck-content {
+    height: 100%;
+}
+
+/* Панель инструментов */
+.ck.ck-toolbar {
+    background: #363636;
+    border: 1px solid #4a4a4a;
+}
+
+/* Кнопки на панели инструментов */
+.ck.ck-toolbar .ck-toolbar__items .ck-button {
+    color: #ffffff;
+}
+
+.ck.ck-toolbar .ck-toolbar__items .ck-button:hover {
+    background: #4a4a4a;
+}
+
+/* Выпадающие меню */
+.ck.ck-dropdown__panel {
+    background: #363636;
+    border: 1px solid #4a4a4a;
+}
+
+.ck.ck-dropdown__panel .ck-list__item .ck-button {
+    color: #ffffff;
+}
+
+/* Стили для активных элементов */
+.ck.ck-button.ck-on {
+    background: #4a4a4a;
+    color: #ffffff;
+}
+
+/* Другие элементы по необходимости */

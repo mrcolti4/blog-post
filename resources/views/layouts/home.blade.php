@@ -6,9 +6,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Mandali&family=Shantell+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
-    @yield("styles")
-  @vite('resources/css/app.css')
-  @vite('resources/js/app.js')
+    @yield("head")
+    @vite('resources/css/app.css')
+    @vite('resources/js/app.js')
 </head>
 <body class="h-full bg-background font-Mandali relative text-text">
 

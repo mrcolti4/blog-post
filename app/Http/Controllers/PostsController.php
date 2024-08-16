@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Image;
+use App\Models\Post;
+use Auth;
 use Illuminate\Http\Request;
 
 class PostsController extends Controller
@@ -19,7 +22,7 @@ class PostsController extends Controller
      */
     public function create()
     {
-        return view("app.user-post-create");
+        return view("app.user.post-create");
     }
 
     /**
@@ -27,6 +30,39 @@ class PostsController extends Controller
      */
     public function store(Request $request)
     {
+        $user = Auth::user();
+
+        $attrs = $request->validate([
+            'title' => 'required',
+            'poster_image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'hero_image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            "content" => "required"
+        ]);
+        $hero_image = $request->file('hero_image');
+        $poster_image = $request->file('poster_image');
+
+        $hero_path = $hero_image->storeAs("images", time() . '.' . $request->hero_image->getClientOriginalExtension(), 'public');
+        $poster_path = $poster_image->storeAs("images", time() . '.' . $request->poster_image->getClientOriginalExtension(), 'public');
+
+        $post = $user->posts()->create([
+            "title" => $request->title,
+            "body" => $request->content
+        ]);
+
+        $post->images()->createMany([
+            [
+                "path" => $hero_path,
+                "alt" => "Hero image",
+                "type" => "hero"
+            ],
+            [
+                "path" => $poster_path,
+                "alt" => "Poster image",
+                "type" => "poster"
+            ]
+        ]);
+
+        return back()->with("success", "You did publish the post");
     }
 
     /**

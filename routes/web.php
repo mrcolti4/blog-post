@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ForgotPassword;
+use App\Http\Controllers\ImageUpload;
 use App\Http\Controllers\PostsController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SessionController;
@@ -46,8 +47,8 @@ Route::delete("/login", [SessionController::class, "destroy"])->name("login.dest
 
 
 Route::name("posts.")->prefix("posts")->group(function () {
-    Route::get("/create", [PostsController::class, "create"])->name("create");
-    Route::post("/store", [PostsController::class, "store"])->name("store");
+    Route::get("/create", [PostsController::class, "create"])->name("create")->middleware("auth");
+    Route::post("/store", [PostsController::class, "store"])->name("store")->middleware("auth");
 });
 
 Route::name("user.")->prefix("user")->group(function () {
@@ -60,6 +61,7 @@ Route::name("user.")->prefix("user")->group(function () {
 });
 
 Route::name("profile.")->prefix("profile")->group(function () {
+    Route::get("/", [ProfileController::class, "index"])->name("index");
     Route::get("/edit", [ProfileController::class, "edit"])->name("edit")->middleware("auth");
     Route::post("/update", [ProfileController::class, "update"])->name("update")->middleware("auth");
 });
@@ -86,6 +88,8 @@ Route::name("users.")->prefix("users")->group(function () {
         });
     });
 });
+
+Route::get("/upload-image", [ImageUpload::class]);
 
 Route::fallback(function () {
     return "Not found 404";

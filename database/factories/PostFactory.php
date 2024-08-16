@@ -21,7 +21,8 @@ class PostFactory extends Factory
             "user_id" => User::all()->random(),
             "title" => fake()->realTextBetween(10, 100),
             "body" => fake()->realText(),
-            "image" => fake()->imageUrl(),
+            "poster_image" => fake()->imageUrl(),
+            "hero_image" => fake()->imageUrl(),
             "likes" => fake()->numberBetween(-100, 1000)
         ];
     }

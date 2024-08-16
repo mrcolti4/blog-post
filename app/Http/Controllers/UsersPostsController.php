@@ -44,7 +44,8 @@ class UsersPostsController extends Controller
         }
 
         return view("app.user.posts-single", [
-            "post" => $post
+            "post" => $post,
+            "images" => $post->images
         ]);
     }
 

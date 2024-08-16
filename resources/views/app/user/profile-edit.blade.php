@@ -22,7 +22,6 @@
             <x-form.input name="first_name" label="First name" value="{{$user->profile->first_name ?? ''}}" />
             <x-form.input name="last_name" label="Last name" value="{{$user->profile->last_name ?? ''}}" />
             <x-form.input name="bio" label="Enter your bio" value="{{$user->profile->bio ?? ''}}"/>
-            <x-form.button>Update profile</x-form>
         </x-form>
     </x-user>
     <x-user.panel>

@@ -2,12 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Profile;
 use App\Models\User;
 use Auth;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
-use Redirect;
 
 class ProfileController extends Controller
 {
@@ -16,7 +14,9 @@ class ProfileController extends Controller
      */
     public function index()
     {
-        //
+        return view("app.user.profile", [
+            "user" => Auth::user()
+        ]);
     }
 
     /**

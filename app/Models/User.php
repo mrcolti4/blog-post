@@ -25,6 +25,11 @@ class User extends Authenticatable
         return $this->hasMany(Post::class);
     }
 
+    public function latestPosts(): HasMany
+    {
+        return $this->posts()->orderBy('created_at', 'desc');
+    }
+
     public function comments(): HasMany
     {
         return $this->hasMany(Comment::class);

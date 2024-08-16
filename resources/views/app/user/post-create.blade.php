@@ -1,25 +1,25 @@
 @extends('layouts.home')
 
-@section('styles')
-    <link ref="stylesheet" href="{{ asset('css/ckeditor5-content.css') }}">
-    <link ref="stylesheet" href="{{ asset('css/ckeditor5-editor.css') }}">
-    <link ref="stylesheet" href="{{ asset('css/ckeditor5.css') }}">
+@section("head")
+
+<meta name="csrf-token" content="{{ csrf_token() }}">
+
 @endsection
 
 @section('content')
-    <section>
+    <section class="container mx-auto py-24">
+        <x-user.title>Create post</x-user>
         <x-flash-message status="success" message="{{session('success')}}" />
-        <x-form.form action="{{ route('posts.store') }}" method="POST" class="mx-auto lg:w-full">
-            <textarea id="editor" name="content"></textarea>
-            <x-form.button>Create post</x-form>
+        <x-form.form enctype="multipart/form-data" action="{{ route('posts.store') }}" method="POST" class="mx-auto lg:w-full grid gap-y-5" >
+            <x-form.input name="title" label="Enter your post title" />
+            <x-user.upload-img label="This image will appear on posts page" name="poster_image" size="poster"/>
+            <x-user.upload-img label="This image will appear on top of page of your post" name="hero_image" size="background"/>
+            <div class="dark-theme-editor">
+                <textarea id="editor" name="content"></textarea>
+            </div>
+            <x-form.button class="mt-20">Create post</x-form>
         </x-form>
     </section>
 @endsection
 
-@section('scripts')
-
-    <script src="{{ asset('https://cdn.ckeditor.com/4.20.1/standard/ckeditor.js') }}"></script>
-    <script>
-        CKEDITOR.replace("editor")
-    </script>
-@endsection
+@vite(['resources/js/ckeditor.js'])

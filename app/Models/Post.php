@@ -11,6 +11,8 @@ class Post extends Model
 {
     use HasFactory;
 
+    protected $guarded = [];
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
@@ -24,5 +26,20 @@ class Post extends Model
     public function likes(): HasMany
     {
         return $this->hasMany(Like::class);
+    }
+
+    public function posterImage()
+    {
+        return $this->images()->where("type", "poster");
+    }
+
+    public function heroImage()
+    {
+        return $this->images()->where("type", "hero");
+    }
+
+    public function images(): HasMany
+    {
+        return $this->hasMany(Image::class);
     }
 }
