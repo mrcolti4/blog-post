@@ -6,15 +6,20 @@ use App\Models\Image;
 use App\Models\Post;
 use Auth;
 use Illuminate\Http\Request;
+use Illuminate\View\View as View;
 
 class PostsController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): View
     {
-        //
+        $posts = Post::latest()->with('user')->paginate(15);
+
+        return view("app.user.posts", [
+            "posts" => $posts
+        ]);
     }
 
     /**

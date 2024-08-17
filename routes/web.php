@@ -1,8 +1,10 @@
 <?php
 
 use App\Http\Controllers\AddComment;
+use App\Http\Controllers\CommentsController;
 use App\Http\Controllers\ForgotPassword;
 use App\Http\Controllers\ImageUpload;
+use App\Http\Controllers\PopularPostsController;
 use App\Http\Controllers\PostsController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SessionController;
@@ -51,6 +53,8 @@ Route::get("/forgot-password", function () {
 })->name("password.request");
 Route::post("/forgot-password", ForgotPassword::class)->name("password.email");
 
+
+// Edit user information and update password
 Route::name("user.")->prefix("user")->group(function () {
     Route::get("/edit", [UsersController::class, "edit"])->name("edit")->middleware("auth");
     Route::post("/update", [UsersController::class, "update"])->name("update")->middleware("auth");
@@ -60,32 +64,42 @@ Route::name("user.")->prefix("user")->group(function () {
     });
 });
 
+// Edit profile information
 Route::name("profile.")->prefix("profile")->group(function () {
     Route::get("/", [ProfileController::class, "index"])->name("index");
     Route::get("/edit", [ProfileController::class, "edit"])->name("edit")->middleware("auth");
     Route::post("/update", [ProfileController::class, "update"])->name("update")->middleware("auth");
 });
 
+// Show, create posts and comments
 Route::name("posts.")->prefix("posts")->group(function () {
-    Route::get("/", [UsersPostsController::class, "index"])->name("index");
-    Route::get("/{post}", [UsersPostsController::class, "show"])->name("show");
+    Route::get("/", [PostsController::class, "index"])->name("index");
+    Route::get("/popular", PopularPostsController::class)->name("popular");
+    Route::prefix("{post}")->group(function () {
+        Route::get("/", [UsersPostsController::class, "show"])->name("show");
+        Route::name("comments.")->prefix("comments")->group(function () {
+            Route::get("/index", [CommentsController::class, "index"])->name("index");
+            Route::post("/store", [CommentsController::class, "store"])->name("store")->middleware("auth");
+        });
+    });
     Route::get("/create", [PostsController::class, "create"])->name("create")->middleware("auth");
     Route::post("/store", [PostsController::class, "store"])->name("store")->middleware("auth");
-
-    Route::name("comments.")->prefix("{post}")->group(function () {
-        Route::post("/store", AddComment::class)->name("store")->middleware("auth");
-    });
 });
 
-
+// Show all users
 Route::name("users.")->prefix("users")->group(function () {
     Route::get("/", [UsersController::class, "index"])->name("index");
 
     Route::name("id.")->prefix("{user:username}")->group(function () {
         Route::get("/", [UsersController::class, "show"])->name("show");
 
+        // Show profile by username
         Route::name("profile.")->prefix("profile")->group(function () {
             Route::get("/", [ProfileController::class, "show"])->name("show");
+        });
+        // Show posts by username
+        Route::name("posts.")->prefix("posts")->group(function () {
+            Route::get("/", [UsersPostsController::class, "index"])->name("index");
         });
     });
 });

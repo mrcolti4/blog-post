@@ -6,12 +6,20 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Str;
 
 class Post extends Model
 {
     use HasFactory;
 
+    const EXCERPT_LENGTH = 100;
+
     protected $guarded = [];
+
+    public function excerpt()
+    {
+        return Str::limit($this->body, Post::EXCERPT_LENGTH);
+    }
 
     public function user(): BelongsTo
     {
