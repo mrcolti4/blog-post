@@ -15,7 +15,8 @@ class PostsController extends Controller
      */
     public function index(): View
     {
-        $posts = Post::latest()->with('user')->paginate(15);
+        $posts = Post::latest()->with('user')->paginate(12);
+        $posts->onEachSide(3);
 
         return view("app.user.posts", [
             "posts" => $posts

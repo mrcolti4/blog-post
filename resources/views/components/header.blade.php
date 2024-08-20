@@ -1,7 +1,7 @@
-<div data-event="toggle-menu" class="md:hidden fixed bottom-3 right-3 bg-accent rounded-xl inline-flex items-center justify-center w-10 h-10 z-10">
+<div data-event="toggle-menu" class="md:hidden fixed bottom-3 right-3 bg-accent rounded-xl inline-flex items-center justify-center w-10 h-10 z-30">
     <i class="fa-solid fa-bars text-text text-3xl"></i>
 </div>
-<header data-target="mobile-menu" class="bg-secondary max-md:rounded-l-xl md:bg-secondary/15 fixed bottom-0 right-0 transition duration-300 translate-x-full pr-10 md:translate-x-0 md:block md:static md:px-0">
+<header data-target="mobile-menu" class="bg-secondary max-md:rounded-l-xl md:bg-secondary/15 fixed bottom-0 right-0 transition duration-300 translate-x-full pr-10 md:translate-x-0 md:block md:static md:px-0 z-20">
     <div class="md:flex md:items-center md:max-w-[1000px] md:mx-auto">
         <a href="/" class="hidden md:block w-20">
             <x-logo src="{{asset('/images/logo.svg')}}" class="w-20"/>

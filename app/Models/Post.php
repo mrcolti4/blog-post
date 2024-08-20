@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\Likeable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -10,15 +11,22 @@ use Illuminate\Support\Str;
 
 class Post extends Model
 {
-    use HasFactory;
+    use HasFactory, Likeable;
 
     const EXCERPT_LENGTH = 100;
+    const TITLE_LENGTH = 30;
 
+    protected $field = "post_id";
     protected $guarded = [];
 
     public function excerpt()
     {
         return Str::limit($this->body, Post::EXCERPT_LENGTH);
+    }
+
+    public function short_title()
+    {
+        return Str::limit($this->title, Post::TITLE_LENGTH);
     }
 
     public function user(): BelongsTo

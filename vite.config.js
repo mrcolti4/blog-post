@@ -10,6 +10,8 @@ export default defineConfig({
                 "resources/js/app.js",
                 "resources/js/ckeditor.js",
                 "resources/js/comments-sort.js",
+                "resources/js/profile-slider.js",
+                "resources/js/swiper-bundle.min.js",
             ],
             refresh: true,
         }),

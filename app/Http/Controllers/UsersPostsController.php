@@ -38,14 +38,23 @@ class UsersPostsController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Request $request, User $user, Post $post)
+    public function show(Request $request, Post $post)
     {
-        $comments = Comment::where("post_id", $post->id)->with("user.profile")->orderByDesc('created_at')->get();
+        $other_posts = Post::latest()
+            ->where("user_id", $request->user()->id)
+            ->where("id", "!=", $post->id)
+            ->take(5)
+            ->get();
+        $comments = Comment::where("post_id", $post->id)
+            ->with("user.profile")
+            ->orderByDesc('created_at')
+            ->get();
 
         return view("app.user.posts-single", [
             "post" => $post,
             "images" => $post->images,
-            "comments" => $comments
+            "comments" => $comments,
+            "other_posts" => $other_posts
         ]);
     }
 

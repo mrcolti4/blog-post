@@ -7,7 +7,7 @@
 @section('content')
 <section class="container mx-auto pt-5">
     @if ($user)
-    <div class="grid grid-cols-1 md:grid-cols-2 grid-rows-3 md:grid-rows-2 gap-8">
+    <div class="grid grid-cols-1 md:grid-cols-2 grid-rows-3 md:grid-rows-card gap-8">
         <x-user.panel class="md:row-start-1 md:row-end-3">
             <x-user.title>User info</x-user>
             <img src="{{$user->profile->image ?? asset('images/default-avatar.svg') }}" class="w-[80px]"/>
@@ -33,14 +33,7 @@
             </div>
             <x-user.posts-slider>
                 @forelse($user->latestPosts as $post)
-                    <div class="swiper-slide">
-                        <a href="{{ route('users.id.posts.show', ["user" => $user, "post" => $post]) }}">
-                        @if(count($post->posterImage))
-                            <img src="{{ asset('storage/'. $post->posterImage[0]->path ) }}"/>
-                        @endif
-                            {{$post->title}}
-                        </a>
-                    </div>
+                <x-home.post-card size="small" :post="$post" slider="true"/>
                     @empty
                     Not published yet
                 @endforelse
@@ -55,6 +48,8 @@
     @endif
 </section>
 @endsection
+@vite('resources/js/profile-slider.js')
+@vite('resources/js/swiper-bundle.min.js')
 @section('scripts')
     <script src="{{ asset('js/swiper-bundle.min.js') }}"></script>
     <script src="{{ asset('js/profile-slider.js') }}"></script>

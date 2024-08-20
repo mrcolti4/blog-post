@@ -33,6 +33,7 @@ export default {
             },
             gridTemplateRows: {
                 panel: "40px auto",
+                card: "200px auto",
             },
         },
     },

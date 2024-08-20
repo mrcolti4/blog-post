@@ -10,6 +10,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SessionController;
 use App\Http\Controllers\RegisteredController;
 use App\Http\Controllers\UpdatePassword;
+use App\Http\Controllers\VoteController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\UsersPostsController;
 use App\Models\Post;
@@ -66,15 +67,19 @@ Route::name("user.")->prefix("user")->group(function () {
 
 // Edit profile information
 Route::name("profile.")->prefix("profile")->group(function () {
-    Route::get("/", [ProfileController::class, "index"])->name("index");
+    Route::get("/", [ProfileController::class, "index"])->name("index")->middleware("auth");
     Route::get("/edit", [ProfileController::class, "edit"])->name("edit")->middleware("auth");
     Route::post("/update", [ProfileController::class, "update"])->name("update")->middleware("auth");
-});
+})->middleware("auth");
 
 // Show, create posts and comments
 Route::name("posts.")->prefix("posts")->group(function () {
     Route::get("/", [PostsController::class, "index"])->name("index");
     Route::get("/popular", PopularPostsController::class)->name("popular");
+
+    Route::get("/create", [PostsController::class, "create"])->name("create")->middleware("auth");
+    Route::post("/store", [PostsController::class, "store"])->name("store")->middleware("auth");
+
     Route::prefix("{post}")->group(function () {
         Route::get("/", [UsersPostsController::class, "show"])->name("show");
         Route::name("comments.")->prefix("comments")->group(function () {
@@ -82,10 +87,9 @@ Route::name("posts.")->prefix("posts")->group(function () {
             Route::post("/store", [CommentsController::class, "store"])->name("store")->middleware("auth");
         });
     });
-    Route::get("/create", [PostsController::class, "create"])->name("create")->middleware("auth");
-    Route::post("/store", [PostsController::class, "store"])->name("store")->middleware("auth");
 });
-
+// Likes and dislikes
+Route::post("/vote/{type}/{id}", VoteController::class)->name("vote.index")->middleware("auth");
 // Show all users
 Route::name("users.")->prefix("users")->group(function () {
     Route::get("/", [UsersController::class, "index"])->name("index");
