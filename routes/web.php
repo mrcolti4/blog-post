@@ -7,6 +7,7 @@ use App\Http\Controllers\ImageUpload;
 use App\Http\Controllers\PopularPostsController;
 use App\Http\Controllers\PostsController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SearchController;
 use App\Http\Controllers\SessionController;
 use App\Http\Controllers\RegisteredController;
 use App\Http\Controllers\UpdatePassword;
@@ -35,9 +36,6 @@ Route::get('/', function () {
     ]);
 });
 
-Route::get("/home", function () {
-    return view("app.home");
-})->name("home")->middleware("auth");
 
 Route::get("/register", [RegisteredController::class, "create"])->name('register.create');
 
@@ -54,6 +52,13 @@ Route::get("/forgot-password", function () {
 })->name("password.request");
 Route::post("/forgot-password", ForgotPassword::class)->name("password.email");
 
+Route::get("/home", function () {
+    return view("app.home");
+})->name("home")->middleware("auth");
+
+Route::name("search.")->prefix("search")->group(function () {
+    Route::get("/", SearchController::class)->name("index");
+});
 
 // Edit user information and update password
 Route::name("user.")->prefix("user")->group(function () {

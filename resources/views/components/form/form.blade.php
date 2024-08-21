@@ -1,4 +1,4 @@
-<form {{$attributes(["class" => "lg:w-80", "method" => "GET"])}}>
+<form {{$attributes(["method" => "GET"])}}>
     @if($attributes->get("method", 'GET') !== "GET")
         @csrf
         @method($attributes->get("method"))

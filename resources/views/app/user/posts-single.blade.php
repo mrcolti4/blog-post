@@ -47,7 +47,7 @@
             </div>
         </div>
     </article>
-    <aside class="bg-secondary/20 p-5 grid gap-4 w-2/3">
+    <aside class="bg-secondary/20 p-5 flex flex-col h-auto gap-6 w-2/3">
         <!-- Profile link -->
         <a href="{{ route('users.id.profile.show', ['user' => $post->user]) }}" class="flex items-center justify-center gap-4">
             <img src="{{$post->user->profile->image}}" class="w-12 h-12 rounded-[100%]" />
@@ -62,15 +62,17 @@
             </p>
         </div>
         <!-- Other posts from this user -->
-        <div class="grid gap-4">
-        <h3 class="text-2xl font-bold font-Shantell">More from {{$post->user->username}}</h3>
-        @forelse($other_posts as $other_post)
-            <div>
-                <a class="hover:underline" href="{{ route('posts.show', ['post'=> $other_post]) }}">{{$other_post->short_title()}}</a>
+        @if(count($other_posts) !== 0)
+            <div class="grid gap-4">
+            <h3 class="text-2xl font-bold font-Shantell">More from {{$post->user->username}}</h3>
+
+                @foreach($other_posts as $other_post)
+                    <div>
+                        <a class="hover:underline" href="{{ route('posts.show', ['post'=> $other_post]) }}">{{$other_post->short_title()}}</a>
+                    </div>
+                @endforeach
             </div>
-            @empty
-        @endforelse
-        </div>
+        @endif
     </aside>
 </section>
 
@@ -95,7 +97,6 @@ document.addEventListener('DOMContentLoaded', function() {
             const model = e.currentTarget.dataset.voteTarget
             const id = e.currentTarget.closest("[data-id]").dataset.id;
             const url = `{{ url('vote/') }}/${model}/${id}`;
-            console.log(url);
             const response = fetch(url, {
 
                 method: "POST",

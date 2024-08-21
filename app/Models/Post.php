@@ -8,10 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
+use Laravel\Scout\Searchable;
 
 class Post extends Model
 {
-    use HasFactory, Likeable;
+    use HasFactory, Likeable, Searchable;
 
     const EXCERPT_LENGTH = 100;
     const TITLE_LENGTH = 30;
@@ -57,5 +58,14 @@ class Post extends Model
     public function images(): HasMany
     {
         return $this->hasMany(Image::class);
+    }
+
+    public function toSearchableArray(): array
+    {
+        return [
+            "id" => $this->id,
+            "title" => $this->title,
+            "body" => $this->body
+        ];
     }
 }
