@@ -50,12 +50,12 @@
     <aside class="bg-secondary/20 p-5 flex flex-col h-auto gap-6 w-2/3">
         <!-- Profile link -->
         <a href="{{ route('users.id.profile.show', ['user' => $post->user]) }}" class="flex items-center justify-center gap-4">
-            <img src="{{$post->user->profile->image}}" class="w-12 h-12 rounded-[100%]" />
+            <img src="{{$post->user->profile->image ?? ''}}" class="w-12 h-12 rounded-[100%]" />
             <h2 class="font-semibold text-lg">Author: {{$post->user->username}}</h2>
         </a>
         <x-form.button class="max-w-[200px] mx-auto flex items-center justify-center" tag="a" href="{{ route('users.id.profile.show', ['user' => $post->user]) }}">Follow</x-form>
         <div class="grid gap-4">
-            <p>{{$post->user->profile->bio}}</p>
+            <p>{{$post->user->profile->bio ?? ''}}</p>
             <p class="grid">
                 <span class="text-xl font-bold text-gray-300">Joined: </span>
                 <span>{{\Carbon\Carbon::parse($post->user->created_at)->isoFormat("MMMM D Y")}}</span>

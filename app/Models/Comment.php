@@ -7,10 +7,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class Comment extends Model
 {
-    protected $field = "comment_id";
+    protected $target_type = "comment";
     use HasFactory, Likeable;
     protected $guarded = [];
 
@@ -24,8 +25,8 @@ class Comment extends Model
         return $this->belongsTo(Post::class);
     }
 
-    public function likes(): HasMany
+    public function activities(): MorphMany
     {
-        return $this->hasMany(Like::class);
+        return $this->morphMany(Activity::class, "target");
     }
 }

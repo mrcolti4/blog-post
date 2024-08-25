@@ -5,19 +5,36 @@
 @endsection
 
 @section('content')
-<section class="container mx-auto pt-5">
+<section class="container mx-auto py-5">
     @if ($user)
-    <div class="grid grid-cols-1 md:grid-cols-2 grid-rows-3 md:grid-rows-card gap-8">
+    <div class="grid grid-cols-1 md:grid-cols-2 grid-rows-3 md:grid-rows-2 gap-8">
         <x-user.panel class="md:row-start-1 md:row-end-3">
             <x-user.title>User info</x-user>
             <img src="{{$user->profile->image ?? asset('images/default-avatar.svg') }}" class="w-[80px]"/>
             <x-user.text>{{$user->username}}</x-user>
             <x-user.text>{{$user->email}}</x-user>
             <x-user.text>{{$user->profile->first_name ?? 'Anonymous'}} {{$user->profile->last_name ?? ''}}</x-user>
+            <x-user.text>{{$user->profile->bio ?? "We dont know nothing about $user->username, but we are sure $user->username is a good person"}}</x-user>
         </x-user>
         <x-user.panel>
-            <x-user.title>User bio</x-user>
-            <x-user.text>{{$user->profile->bio ?? "We dont know nothing about $user->username, but we are sure $user->username is a good person"}}</x-user>
+            <div class="flex items-center justify-between">
+                <x-user.title>Favorite posts</x-user>
+                <div class="flex gap-3">
+                    <div class="swiper-button-prev static after:content-none">
+                        <i class="fa-solid fa-arrow-left text-xl"></i>
+                    </div>
+                    <div class="swiper-button-next static after:content-none">
+                        <i class="fa-solid fa-arrow-right text-xl"></i>
+                    </div>
+                </div>
+            </div>
+            <x-user.posts-slider>
+                @forelse($user->favoritePosts as $post)
+                <x-home.post-card size="small" :post="$post" slider="true"/>
+                    @empty
+                    Not published yet
+                @endforelse
+            </x-user.posts-slider>
         </x-user>
         <x-user.panel>
             <div class="flex items-center justify-between">

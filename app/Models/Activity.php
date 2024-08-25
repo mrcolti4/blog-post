@@ -5,9 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 
-class Like extends Model
+class Activity extends Model
 {
+    protected $table = "activities";
+    protected $guarded = [];
+
     use HasFactory;
 
     public function user(): BelongsTo
@@ -15,13 +19,8 @@ class Like extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function post(): BelongsTo
+    public function target(): MorphTo
     {
-        return $this->belongsTo(Post::class);
-    }
-
-    public function comment(): BelongsTo
-    {
-        return $this->belongsTo(Comment::class);
+        return $this->morphTo();
     }
 }

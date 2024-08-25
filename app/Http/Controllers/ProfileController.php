@@ -14,7 +14,7 @@ class ProfileController extends Controller
      */
     public function index()
     {
-        return view("app.user.profile", [
+        return view("app.profile.show", [
             "user" => Auth::user()
         ]);
     }
@@ -40,7 +40,7 @@ class ProfileController extends Controller
      */
     public function show(User $user): View
     {
-        return view("app.user.profile", [
+        return view("app.profile.show", [
             "user" => $user
         ]);
     }
@@ -50,7 +50,7 @@ class ProfileController extends Controller
      */
     public function edit(Request $request, User $user): View
     {
-        return view("app.user.profile-edit", [
+        return view("app.profile.edit", [
             "user" => Auth::user()
         ]);
     }

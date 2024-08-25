@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Str;
 use Laravel\Scout\Searchable;
 
@@ -17,7 +18,7 @@ class Post extends Model
     const EXCERPT_LENGTH = 100;
     const TITLE_LENGTH = 30;
 
-    protected $field = "post_id";
+    protected $target_type = "post";
     protected $guarded = [];
 
     public function excerpt()
@@ -40,9 +41,9 @@ class Post extends Model
         return $this->hasMany(Comment::class);
     }
 
-    public function likes(): HasMany
+    public function activities(): MorphMany
     {
-        return $this->hasMany(Like::class);
+        return $this->morphMany(Activity::class, 'target');
     }
 
     public function posterImage()

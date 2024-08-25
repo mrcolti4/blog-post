@@ -2,7 +2,7 @@
 
 namespace App\Traits;
 
-use Illuminate\Support\Facades\DB;
+use App\Models\Activity;
 
 trait Likeable
 {
@@ -18,25 +18,34 @@ trait Likeable
 
     private function addLikeOrDislike($userId, $type)
     {
-        return DB::table("likes")->updateOrInsert(
-            ["user_id" => $userId, $this->field => $this->id],
-            ["vote" => $type]
-        );
+        $action = Activity::where("target_id", $this->id)
+            ->where("user_id", $userId)
+            ->where("target_type", get_class($this))
+            ->first();
+
+        if ($action && $action->action_type !== $type) {
+            $action->delete();
+        }
+
+        return Activity::updateOrInsert([
+            "user_id" => $userId,
+            "action_type" => $type,
+            "target_type" => get_class($this),
+            "target_id" => $this->id
+        ]);
     }
 
     public function getLikesCount()
     {
-        return $this->likes()
-            ->where("vote", "like")
-            ->get()
+        return $this->activities()
+            ->where("action_type", "like")
             ->count();
     }
 
     public function getDislikesCount()
     {
-        return $this->likes()
-            ->where("vote", "dislike")
-            ->get()
+        return $this->activities()
+            ->where("action_type", "dislike")
             ->count();
     }
 }

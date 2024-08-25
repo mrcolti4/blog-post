@@ -18,7 +18,7 @@ class PostsController extends Controller
         $posts = Post::latest()->with('user')->paginate(12);
         $posts->onEachSide(3);
 
-        return view("app.user.posts", [
+        return view("app.posts.index", [
             "posts" => $posts
         ]);
     }
@@ -28,7 +28,7 @@ class PostsController extends Controller
      */
     public function create()
     {
-        return view("app.user.post-create");
+        return view("app.posts.create");
     }
 
     /**

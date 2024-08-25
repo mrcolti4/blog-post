@@ -10,7 +10,7 @@
             <ul class="p-5 md:p-0 grid grid-rows-2 grid-cols-3 gap-8 md:flex items-center justify-center md:gap-6">
                 <x-nav-link href="{{ route('posts.popular') }}">Popular</x-nav-link>
                 <x-nav-link href="{{ route('posts.index') }}">Latest posts</x-nav-link>
-                <x-nav-link href="#">About</x-nav-link>
+                <x-nav-link href="{{ route('search.index') }}">Search</x-nav-link>
                 @guest
                     <x-nav-link href="{{ route('login') }}" class="md:ml-20">Login</x-nav-link>
                     <x-nav-link href="{{ route('register.create') }}">Register</x-nav-link>
@@ -24,16 +24,16 @@
                         <x-nav-link href="{{ route('profile.index') }}">Profile</x-nav-link>
                         <x-nav-link href="{{ route('posts.create') }}">Create post</x-nav-link>
                         <x-nav-link>Favorite</x-nav-link>
+                        <x-nav-link>
+                            <x-form.form method="POST" action="/login" class="lg:w-auto">
+                                @method("DELETE")
+                                <x-form.button class="w-[150px]" tag="button">
+                                    Logout
+                                </x-form>
+                            </x-form>
+                        </x-nav-link>
                     </ul>
                 </div>
-                <li>
-                    <x-form.form method="POST" action="/login" class="lg:w-auto">
-                        @method("DELETE")
-                        <x-form.button class="w-[150px]" tag="button">
-                            Logout
-                        </x-form>
-                    </x-form>
-                </li>
                 @endauth
             </ul>
         </nav>

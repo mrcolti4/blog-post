@@ -18,8 +18,15 @@ class ProfileSeeder extends Seeder
         $users = User::factory()->count(50)->create();
         foreach ($users as $user) {
             Profile::factory()->create(["user_id" => $user->id]);
-            Post::factory()->count(random_int(0, 5))->create();
-            Comment::factory()->count(random_int(0, 5))->create();
+            $posts = Post::factory()->count(random_int(0, 5))->create(['user_id' => $user->id]);
+
+            foreach ($posts as $post) {
+                Comment::factory()
+                    ->for($post)
+                    ->for($user)
+                    ->count(random_int(0, 5))
+                    ->create();
+            }
         }
     }
 }

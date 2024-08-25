@@ -14,8 +14,9 @@ class UsersPostsController extends Controller
      */
     public function index(User $user)
     {
-        return view("app.user.posts", [
-            "body" => $user->posts
+        $posts = Post::where("user_id", $user->id)->paginate(10);
+        return view("app.posts.index", [
+            "posts" => $posts
         ]);
     }
 
@@ -41,7 +42,7 @@ class UsersPostsController extends Controller
     public function show(Request $request, Post $post)
     {
         $other_posts = Post::latest()
-            ->where("user_id", $request->user()->id)
+            ->where("user_id", $post->user->id)
             ->where("id", "!=", $post->id)
             ->take(5)
             ->get();
@@ -50,7 +51,7 @@ class UsersPostsController extends Controller
             ->orderByDesc('created_at')
             ->get();
 
-        return view("app.user.posts-single", [
+        return view("app.posts.show", [
             "post" => $post,
             "images" => $post->images,
             "comments" => $comments,

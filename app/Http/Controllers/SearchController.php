@@ -10,13 +10,14 @@ class SearchController extends Controller
     public function __invoke(Request $request)
     {
         $query = $request->query("q", "");
-        $search_posts = null;
+        $posts = [];
         if ($query) {
-            $search_posts = Post::search($query)->get();
+            $search_posts = Post::search($query);
+
+            $posts = $search_posts->paginate(10);
+            $count = $search_posts->count();
         }
 
-        return view("app.search", [
-            "posts" => $search_posts
-        ]);
+        return view("app.search", compact("posts", "count"));
     }
 }
