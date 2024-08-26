@@ -29,7 +29,7 @@ class SessionController extends Controller
         }
         $request->session()->regenerate();
 
-        return to_route("home");
+        return redirect()->intended();
     }
 
     public function destroy()

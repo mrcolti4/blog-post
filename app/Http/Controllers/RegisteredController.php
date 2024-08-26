@@ -28,6 +28,6 @@ class RegisteredController extends Controller
         // auth
         Auth::login($user);
         // redirect
-        return redirect()->to("home");
+        return redirect()->intended();
     }
 }

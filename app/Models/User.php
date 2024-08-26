@@ -9,10 +9,13 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Testing\Fluent\Concerns\Has;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable, CanResetPassword;
+    use HasFactory;
+    use Notifiable;
+    use CanResetPassword;
 
     protected $guarded = [];
 
@@ -31,10 +34,10 @@ class User extends Authenticatable
         return $this->posts()->orderBy('created_at', 'desc');
     }
 
-    public function favoritePosts(): HasMany
+    public function favoritePosts()
     {
-        # TODO
-        return $this->hasMany(Post::class);
+        return $this->morphedByMany(Post::class, 'target', 'activities')
+            ->where('activities.action_type', 'like');
     }
 
     public function comments(): HasMany
@@ -42,9 +45,9 @@ class User extends Authenticatable
         return $this->hasMany(Comment::class);
     }
 
-    public function activities(): MorphMany
+    public function activities(): HasMany
     {
-        return $this->morphMany(Activity::class, "target");
+        return $this->hasMany(Activity::class);
     }
 
     public function getRouteKeyName(): string

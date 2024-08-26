@@ -6,7 +6,7 @@
 
 @section('content')
 <section class="px-[200px] flex py-10 gap-8">
-    <article data-id="{{$post->id}}">
+    <article data-id="{{$post->id}}" data-target-type="post">
         <div>
             @foreach($images as $image)
                 @if($image['alt'] === "Hero image")
@@ -21,22 +21,16 @@
                 <div>
                     <p class="font-bold text-lg">Did you like this article?</p>
                     <div>
-                        <button data-vote-event="like" data-vote-target="post">
-                            <i class="fa-regular fa-thumbs-up text-green-500"></i>
-                        </button>
-                        <span>{{$post->getLikesCount() - $post->getDislikesCount()}}</span>
-                        <button data-vote-event="dislike" data-vote-target="post">
-                            <i class="fa-regular fa-thumbs-down text-red-500"></i>
-                        </button>
+                        <x-vote-buttons :target="$post" />
                     </div>
                 </div>
             </div>
             <!-- Comments section -->
             <div class="grid gap-y-10 bg-primary-default/30 rounded-3xl p-6">
-                    <select name="sort" class="comments-sort bg-background">
-                        <option value="latest" {{ request('sort') == 'latest' ? 'selected' : ''}}>Latest comments</option>
-                        <option value="popular" {{ request('sort') == 'popular' ? 'selected' : ''}}>Most popular comments</option>
-                    </select>
+                <select name="sort" class="comments-sort bg-background">
+                    <option value="latest" {{ request('sort') == 'latest' ? 'selected' : ''}}>Latest comments</option>
+                    <option value="popular" {{ request('sort') == 'popular' ? 'selected' : ''}}>Most popular comments</option>
+                </select>
                 <x-form.form method="POST" action="{{ route('posts.comments.store', ['post' => $post]) }}" class="lg:w-full">
                     <x-form.input name="body" label="Leave your comment..." tag="textarea" />
                     <x-form.button>Comment</x-form>
@@ -75,42 +69,5 @@
         @endif
     </aside>
 </section>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const select = document.querySelector("select.comments-sort");
-    const commentsList = document.querySelector("div.comments-list");
-    const voteBtns = document.querySelectorAll("[data-vote-event]");
-
-    select.addEventListener("change", async function (e) {
-        const sortType = this.value;
-        const url = `{{ url('posts/') }}/{{$post->id}}/comments/index?sort=${sortType}`;
-        const response = await fetch(url);
-
-        const data = await response.json();
-        commentsList.innerHTML = data.body;
-    });
-
-    voteBtns.forEach(btn => {
-        btn.addEventListener("click", async function(e) {
-            const event = e.currentTarget.dataset.voteEvent;
-            const model = e.currentTarget.dataset.voteTarget
-            const id = e.currentTarget.closest("[data-id]").dataset.id;
-            const url = `{{ url('vote/') }}/${model}/${id}`;
-            const response = fetch(url, {
-
-                method: "POST",
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                },
-                body: JSON.stringify({ event: event })
-
-            });
-
-            console.log(await response)
-        })
-    })
-})
-</script>
+@vite('resources/js/show-post.js')
 @endsection

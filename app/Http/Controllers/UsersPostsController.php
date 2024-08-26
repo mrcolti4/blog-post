@@ -47,7 +47,7 @@ class UsersPostsController extends Controller
             ->take(5)
             ->get();
         $comments = Comment::where("post_id", $post->id)
-            ->with("user.profile")
+            ->with("user.profile", "activities")
             ->orderByDesc('created_at')
             ->get();
 

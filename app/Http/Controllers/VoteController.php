@@ -19,8 +19,12 @@ class VoteController extends Controller
         if (!in_array($event, ["like", "dislike"])) {
             return response()->json(["error" => "Invalid event", 400]);
         }
-        $result = $model->$event($request->user()->id);
+        $post = $model->$event($request->user()->id);
+        $result = $post->getLikesCount() - $post->getDislikesCount();
 
-        return response()->json(["success" => true, "result" => $result]);
+        return response()->json(["event" => $event, "result" => $result, "target" => [
+            "id" => $post->id,
+            "type" => get_class($post)
+        ]]);
     }
 }

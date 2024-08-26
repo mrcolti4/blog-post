@@ -12,6 +12,7 @@ export default defineConfig({
                 "resources/js/comments-sort.js",
                 "resources/js/profile-slider.js",
                 "resources/js/swiper-bundle.min.js",
+                "resources/js/show-post.js",
             ],
             refresh: true,
         }),

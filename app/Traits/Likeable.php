@@ -23,16 +23,24 @@ trait Likeable
             ->where("target_type", get_class($this))
             ->first();
 
-        if ($action && $action->action_type !== $type) {
-            $action->delete();
+        if ($action) {
+            if ($action->action_type !== $type) {
+                $action->delete();
+            } else {
+                return $this;
+            }
         }
 
-        return Activity::updateOrInsert([
+        Activity::updateOrInsert([
             "user_id" => $userId,
             "action_type" => $type,
             "target_type" => get_class($this),
             "target_id" => $this->id
         ]);
+
+        $this->updateLikes();
+
+        return $this;
     }
 
     public function getLikesCount()
@@ -47,5 +55,11 @@ trait Likeable
         return $this->activities()
             ->where("action_type", "dislike")
             ->count();
+    }
+
+    private function updateLikes()
+    {
+        $this->likes = $this->getLikesCount() - $this->getDislikesCount();
+        $this->save();
     }
 }
