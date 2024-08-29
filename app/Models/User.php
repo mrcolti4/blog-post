@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Notifications\NewPostNotification;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -16,6 +17,17 @@ class User extends Authenticatable
     use CanResetPassword;
 
     protected $guarded = [];
+
+    private function getAllNotifications()
+    {
+        return $this->morphMany(
+            Notification::class,
+            'notifiable',
+            'notifiable_type',
+            'notifiable_id',
+            'id'
+        )
+    }
 
     public function profile(): HasOne
     {
@@ -50,14 +62,21 @@ class User extends Authenticatable
 
     public function followers()
     {
-        return $this->morphedByMany(User::class, 'target', 'activities')
-            ->where('activities.action_type', 'follow');
+        return $this->morphedByMany(User::class, 'target', 'activities', 'target_id', 'user_id')
+            ->where('action_type', 'follow');
+    }
+
+    public function newPostNotifications()
+    {
+        return $this->getAllNotifications()
+            ->where("type", NewPostNotification::class);
     }
 
     public function getRouteKeyName(): string
     {
         return "username";
     }
+
     protected $hidden = [
         'password',
         'remember_token',

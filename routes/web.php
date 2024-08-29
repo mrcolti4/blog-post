@@ -1,19 +1,19 @@
 <?php
 
-use App\Http\Controllers\AddComment;
-use App\Http\Controllers\CommentsController;
-use App\Http\Controllers\ForgotPassword;
+use App\Http\Controllers\actions\SubscriptionController as SubscriptionController;
+use App\Http\Controllers\posts\CommentsController;
+use App\Http\Controllers\auth\ForgotPassword;
 use App\Http\Controllers\ImageUpload;
-use App\Http\Controllers\PopularPostsController;
-use App\Http\Controllers\PostsController;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\SearchController;
-use App\Http\Controllers\SessionController;
-use App\Http\Controllers\RegisteredController;
-use App\Http\Controllers\UpdatePassword;
-use App\Http\Controllers\VoteController;
-use App\Http\Controllers\UsersController;
-use App\Http\Controllers\UsersPostsController;
+use App\Http\Controllers\posts\PopularPostsController;
+use App\Http\Controllers\posts\PostsController;
+use App\Http\Controllers\users\ProfileController;
+use App\Http\Controllers\posts\SearchController;
+use App\Http\Controllers\auth\SessionController;
+use App\Http\Controllers\auth\RegisteredController;
+use App\Http\Controllers\auth\UpdatePassword;
+use App\Http\Controllers\actions\VoteController;
+use App\Http\Controllers\users\UsersController;
+use App\Http\Controllers\posts\UsersPostsController;
 use App\Models\Post;
 use Illuminate\Support\Facades\Route;
 
@@ -74,7 +74,7 @@ Route::name("user.")->prefix("user")->group(function () {
 Route::name("profile.")->prefix("profile")->group(function () {
     Route::get("/", [ProfileController::class, "index"])->name("index")->middleware("auth");
     Route::get("/edit", [ProfileController::class, "edit"])->name("edit")->middleware("auth");
-    Route::post("/update", [ProfileController::class, "update"])->name("update")->middleware("auth");
+    Route::post("/update/{user}", [ProfileController::class, "update"])->name("update")->middleware("auth");
 })->middleware("auth");
 
 // Show, create posts and comments
@@ -93,8 +93,6 @@ Route::name("posts.")->prefix("posts")->group(function () {
         });
     });
 });
-// Likes and dislikes
-Route::post("/vote/{type}/{id}", VoteController::class)->name("vote.index")->middleware("auth");
 // Show all users
 Route::name("users.")->prefix("users")->group(function () {
     Route::get("/", [UsersController::class, "index"])->name("index");
@@ -112,6 +110,11 @@ Route::name("users.")->prefix("users")->group(function () {
         });
     });
 });
+// Action controllers
+// Likes and dislikes
+Route::post("/vote/{type}/{id}", VoteController::class)->name("vote.index")->middleware("auth");
+// Follow user
+Route::post("/follow/{user}", SubscriptionController::class)->name("follow.index")->middleware("auth");
 
 Route::get("/upload-image", [ImageUpload::class]);
 

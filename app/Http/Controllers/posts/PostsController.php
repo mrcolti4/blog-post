@@ -3,13 +3,17 @@
 namespace App\Http\Controllers\posts;
 
 use App\Http\Controllers\Controller;
+use App\Models\Activity;
 use App\Models\Image;
 use App\Models\Post;
+use App\Models\User;
+use App\Notifications\NewPostNotification;
 use App\Services\UploadImageService;
 use Auth;
 use DB;
 use Illuminate\Http\Request;
 use Illuminate\View\View as View;
+use Notification;
 
 class PostsController extends Controller
 {
@@ -50,6 +54,7 @@ class PostsController extends Controller
             'hero_image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
             "content" => "required"
         ]);
+        $followers = $user->followers()->get();
         DB::beginTransaction();
 
         try {
@@ -72,6 +77,7 @@ class PostsController extends Controller
             $post->save();
 
             DB::commit();
+            Notification::send($followers, new NewPostNotification($post));
 
             return back()->with("success", "You did publish the post");
         } catch (\Throwable $th) {

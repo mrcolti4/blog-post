@@ -17,10 +17,10 @@
                 @endguest
                 @auth
                 <div class="md:ml-20 relative">
-                    <button data-event="toggle-profile-menu">
+                    <button data-event="toggle-profile-menu" aria-expanded="false" aria-haspopup="menu">
                         <i class="fa-regular fa-user text-xl"></i>
                     </button>
-                    <ul data-target="profile-menu" class="hidden opacity-0 absolute top-8 left-1/2 -translate-x-2/4 h-0 transition-all bg-secondary rounded-xl p-5 w-32 grid gap-4 z-50">
+                    <ul data-target="profile-menu" role="menu" class="hidden opacity-0 absolute top-8 left-1/2 -translate-x-2/4 transition-all bg-secondary rounded-xl p-5 w-32 grid gap-4 z-50">
                         <x-nav-link href="{{ route('profile.index') }}">Profile</x-nav-link>
                         <x-nav-link href="{{ route('posts.create') }}">Create post</x-nav-link>
                         <x-nav-link>Favorite</x-nav-link>
@@ -34,8 +34,18 @@
                         </x-nav-link>
                     </ul>
                 </div>
+                <div>
+                    <button>
+                        <i class="fa-regular fa-bell text-xl"></i>
+                    </button>
+                </div>
                 @endauth
             </ul>
         </nav>
     </div>
 </header>
+@auth
+    <div>
+        {{auth()->user()->newPostNotifications}}
+    </div>
+@endauth

@@ -9,9 +9,7 @@ document.addEventListener("click", function (e) {
     }
     if (!profileMenu.contains(e.target) && !profileBtn.contains(e.target)) {
         profileMenu.classList.add("hidden");
-        profileMenu.classList.add("h-0");
         profileMenu.classList.add("opacity-0");
-        profileMenu.classList.remove("h-auto");
     }
 });
 
@@ -23,8 +21,6 @@ menuBtn.addEventListener("click", function (e) {
 profileBtn.addEventListener("click", function (e) {
     profileMenu.classList.toggle("hidden");
     setTimeout(function () {
-        profileMenu.classList.toggle("h-0");
-        profileMenu.classList.toggle("h-auto");
         profileMenu.classList.toggle("opacity-0");
     }, 20);
 });

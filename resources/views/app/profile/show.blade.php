@@ -15,6 +15,11 @@
             <x-user.text>{{$user->email}}</x-user>
             <x-user.text>{{$user->profile->first_name ?? 'Anonymous'}} {{$user->profile->last_name ?? ''}}</x-user>
             <x-user.text>{{$user->profile->bio ?? "We dont know nothing about $user->username, but we are sure $user->username is a good person"}}</x-user>
+            @if(auth()->id() !== $user->id)
+            <x-form.form action="{{ route('follow.index', ['user' => $user]) }}" method="POST">
+                <x-form.button>Follow</x-form>
+            </x-form>
+            @endif
         </x-user>
         <x-user.panel>
             <x-user.title>{{ucfirst($user->username)}} follows this people</x-user>
