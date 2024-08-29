@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\posts;
 
+use App\Http\Controllers\Controller;
 use App\Models\Comment;
 use App\Models\Post;
 use App\Models\User;
@@ -16,7 +17,7 @@ class UsersPostsController extends Controller
     {
         $posts = Post::where("user_id", $user->id)->paginate(10);
         return view("app.posts.index", [
-            "posts" => $posts
+            "posts" => $posts,
         ]);
     }
 
@@ -41,7 +42,7 @@ class UsersPostsController extends Controller
      */
     public function show(Request $request, Post $post)
     {
-        $other_posts = Post::latest()
+        $otherPosts = Post::latest()
             ->where("user_id", $post->user->id)
             ->where("id", "!=", $post->id)
             ->take(5)
@@ -51,12 +52,7 @@ class UsersPostsController extends Controller
             ->orderByDesc('created_at')
             ->get();
 
-        return view("app.posts.show", [
-            "post" => $post,
-            "images" => $post->images,
-            "comments" => $comments,
-            "other_posts" => $other_posts
-        ]);
+        return view("app.posts.show", compact("post", "otherPosts", "comments"));
     }
 
     /**

@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\users;
 
+use App\Http\Controllers\Controller;
 use App\Models\User;
 use Auth;
 use Illuminate\Http\Request;
@@ -15,7 +16,7 @@ class ProfileController extends Controller
     public function index()
     {
         return view("app.profile.show", [
-            "user" => Auth::user()
+            "user" => Auth::user(),
         ]);
     }
 
@@ -41,7 +42,7 @@ class ProfileController extends Controller
     public function show(User $user): View
     {
         return view("app.profile.show", [
-            "user" => $user
+            "user" => $user,
         ]);
     }
 
@@ -51,15 +52,18 @@ class ProfileController extends Controller
     public function edit(Request $request, User $user): View
     {
         return view("app.profile.edit", [
-            "user" => Auth::user()
+            "user" => Auth::user(),
         ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request)
+    public function update(Request $request, User $user)
     {
+        if (auth()->id() !== $user->id) {
+            abort(403);
+        }
         $attrs = $request->validate([
             "first_name" => "string|min:2",
             "last_name" => "string|min:2",

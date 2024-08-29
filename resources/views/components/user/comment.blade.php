@@ -8,7 +8,7 @@
             <p>{{\Carbon\Carbon::parse($comment->created_at)->diffForHumans()}}</p>
         </div>
         <div class="flex gap-3 ml-auto text-lg">
-            <x-vote-buttons :target="$comment" />
+            <x-vote-buttons :target="$comment" name="comment" />
         </div>
     </div>
     <p class="mt-3">

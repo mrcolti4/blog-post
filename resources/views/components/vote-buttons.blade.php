@@ -1,4 +1,4 @@
-@props(['target'])
+@props(['target', 'name'])
 
 @php
     $action_type = false;
@@ -7,12 +7,11 @@
         $action_type = $liked->action_type ?? false;
     }
 @endphp
-
-<button data-vote-event="like" data-vote-target="$target" class="like-btn {{$action_type === 'like' ? 'active' : ''}}">
+<button data-vote-event="like" data-vote-target="{{$name}}" class="like-btn {{$action_type === 'like' ? 'active' : ''}}">
     <i class="{{$action_type === 'like' ? 'fa-solid' : 'fa-regular'}} fa-thumbs-up text-green-500"></i>
 </button>
-<span class="comment-likes-count">{{$target->likes}}</span>
-<button data-vote-event="dislike" data-vote-target="$target" class="dislike-btn {{$action_type === 'dislike' ? 'active' : ''}}">
+<span class="likes-count">{{$target->likes}}</span>
+<button data-vote-event="dislike" data-vote-target="{{$name}}" class="dislike-btn {{$action_type === 'dislike' ? 'active' : ''}}">
     <i class="{{$action_type === 'dislike' ? 'fa-solid' : 'fa-regular'}} fa-regular fa-thumbs-down text-red-500 "></i>
 </button>
 

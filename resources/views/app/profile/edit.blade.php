@@ -10,7 +10,7 @@
         @if(session('error'))
              <x-flash-message status="error" message="{{session('error')}}"/>
         @endif
-        <x-form.form action="{{ route('user.update') }}" method="POST">
+        <x-form.form action="{{ route('user.update', ['user' => $user]) }}" method="POST">
             <x-form.input name="username" label="" placeholder="{{$user->username}}" />
             <x-form.input name="email" label="" placeholder="{{$user->email}}" type="email" />
             <x-form.button>Update info</x-form>
@@ -18,10 +18,11 @@
     </x-user>
     <x-user.panel>
         <x-user.title>User profile</x-user>
-        <x-form.form action="{{ route('profile.update') }}" method="POST" class="text-left">
+        <x-form.form action="{{ route('profile.update', ['user' => $user]) }}" method="POST" class="text-left">
             <x-form.input name="first_name" label="First name" value="{{$user->profile->first_name ?? ''}}" />
             <x-form.input name="last_name" label="Last name" value="{{$user->profile->last_name ?? ''}}" />
             <x-form.input name="bio" label="Enter your bio" value="{{$user->profile->bio ?? ''}}"/>
+            <x-form.button>Update profile</x-form>
         </x-form>
     </x-user>
     <x-user.panel>

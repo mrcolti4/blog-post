@@ -1,7 +1,7 @@
 const select = document.querySelector("select.comments-sort");
 const commentsList = document.querySelector("div.comments-list");
 const voteBtns = document.querySelectorAll("[data-vote-event]");
-const postLikesCount = document.querySelector(".post-likes-count");
+const postLikesCount = document.querySelector("article .likes-count");
 const comments = commentsList.querySelectorAll("div.comment");
 
 select.addEventListener("change", async function (e) {
@@ -39,7 +39,7 @@ voteBtns.forEach((btn) => {
         const postType = targetType[targetType.length - 1];
         if (btn.closest("div.comment")) {
             const comment = btn.closest("div.comment");
-            comment.querySelector(".comment-likes-count").innerHTML = result;
+            comment.querySelector(".likes-count").innerHTML = result;
         } else {
             // Change likes count for post
             postLikesCount.innerHTML = result;

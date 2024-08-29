@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\posts;
 
+use App\Http\Controllers\Controller;
 use App\Models\Post;
 use Illuminate\Http\Request;
 
@@ -10,7 +11,9 @@ class SearchController extends Controller
     public function __invoke(Request $request)
     {
         $query = $request->query("q", "");
+        $categories = $request->query("category", "");
         $posts = [];
+        $count = 0;
         if ($query) {
             $search_posts = Post::search($query);
 

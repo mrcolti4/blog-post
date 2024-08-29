@@ -14,9 +14,10 @@ return new class extends Migration
     {
         Schema::create('images', function (Blueprint $table) {
             $table->id();
-            $table->string("path");
+            $table->string("url");
             $table->string("alt");
-            $table->enum("type", ['poster', 'hero', 'post']);
+            $table->string("public_id");
+            $table->string("file_name");
             $table->foreignIdFor(Post::class)->constrained()->cascadeOnDelete();
             $table->timestamps();
         });

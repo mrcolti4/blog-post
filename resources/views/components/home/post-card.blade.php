@@ -1,7 +1,7 @@
 @props(['post', 'size' => 'default', 'slider' => 'false'])
 
 <li {{$attributes(["class" => "bg-secondary/15 grid p-5 rounded-xl group/item transition duration-300 border-transparent border-4 hover:border-accent" . ($slider === "true" ? " swiper-slide" : "")])}}>
-    <img src={{$post->poster_image}}/>
+    <img src="{{$post->poster_image}}" />
     <div class="mt-5">
         <h3 class="text-xl font-semibold transition duration-300 group-hover/item:text-accent">{{$post->short_title()}}</h3>
         @if ($size !== 'small')

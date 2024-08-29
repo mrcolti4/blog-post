@@ -1,15 +1,23 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\posts;
 
+use App\Http\Controllers\Controller;
 use App\Models\Image;
 use App\Models\Post;
+use App\Services\UploadImageService;
 use Auth;
+use DB;
 use Illuminate\Http\Request;
 use Illuminate\View\View as View;
 
 class PostsController extends Controller
 {
+    public function __construct(
+        protected UploadImageService $service
+    )
+    {
+    }
     /**
      * Display a listing of the resource.
      */
@@ -18,9 +26,7 @@ class PostsController extends Controller
         $posts = Post::latest()->with('user')->paginate(12);
         $posts->onEachSide(3);
 
-        return view("app.posts.index", [
-            "posts" => $posts
-        ]);
+        return view("app.posts.index", compact("posts"));
     }
 
     /**
@@ -44,31 +50,36 @@ class PostsController extends Controller
             'hero_image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
             "content" => "required"
         ]);
-        $hero_image = $request->file('hero_image');
-        $poster_image = $request->file('poster_image');
+        DB::beginTransaction();
 
-        $hero_path = $hero_image->storeAs("images", time() . '.' . $request->hero_image->getClientOriginalExtension(), 'public');
-        $poster_path = $poster_image->storeAs("images", time() . '.' . $request->poster_image->getClientOriginalExtension(), 'public');
+        try {
+            $post = $user->posts()->create([
+                "title" => $attrs["title"],
+                "body" => $attrs["content"],
+                "category_id" => 1,
+            ]);
 
-        $post = $user->posts()->create([
-            "title" => $request->title,
-            "body" => $request->content
-        ]);
+            $posterImage = $this->service->upload($request->file('poster_image'), "poster");
+            $heroImage = $this->service->upload($request->file('hero_image'), "background");
 
-        $post->images()->createMany([
-            [
-                "path" => $hero_path,
-                "alt" => "Hero image",
-                "type" => "hero"
-            ],
-            [
-                "path" => $poster_path,
-                "alt" => "Poster image",
-                "type" => "poster"
-            ]
-        ]);
+            $post->images()->createMany([
+                $posterImage,
+                $heroImage,
+            ]);
 
-        return back()->with("success", "You did publish the post");
+            $post->hero_image = $heroImage["url"];
+            $post->poster_image = $posterImage["url"];
+            $post->save();
+
+            DB::commit();
+
+            return back()->with("success", "You did publish the post");
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            dd($th->getMessage());
+
+            return back()->with("error", "Something went wrong");
+        }
     }
 
     /**

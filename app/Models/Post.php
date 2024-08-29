@@ -13,7 +13,7 @@ use Laravel\Scout\Searchable;
 
 class Post extends Model
 {
-    use HasFactory, Likeable, Searchable;
+    use HasFactory, Likeable;
 
     const EXCERPT_LENGTH = 100;
     const TITLE_LENGTH = 30;
@@ -39,6 +39,11 @@ class Post extends Model
     public function comments(): HasMany
     {
         return $this->hasMany(Comment::class);
+    }
+
+    public function category(): BelongsTo
+    {
+        return $this->belongsTo(Category::class);
     }
 
     public function activities(): MorphMany

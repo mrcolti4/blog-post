@@ -5,11 +5,9 @@ namespace App\Models;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Testing\Fluent\Concerns\Has;
 
 class User extends Authenticatable
 {
@@ -48,6 +46,12 @@ class User extends Authenticatable
     public function activities(): HasMany
     {
         return $this->hasMany(Activity::class);
+    }
+
+    public function followers()
+    {
+        return $this->morphedByMany(User::class, 'target', 'activities')
+            ->where('activities.action_type', 'follow');
     }
 
     public function getRouteKeyName(): string

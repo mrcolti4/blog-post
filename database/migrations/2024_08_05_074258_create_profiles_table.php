@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string("first_name");
             $table->string("last_name");
             $table->text("bio")->nullable();
-            $table->string("image")->default("user.png");
+            $table->string("image")->nullable();
             $table->timestamps();
         });
     }

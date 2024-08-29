@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Controller;
+use Cloudinary\Cloudinary;
 use Illuminate\Http\Request;
 use Storage;
 
@@ -13,15 +15,14 @@ class ImageUpload extends Controller
     public function __invoke(Request $request)
     {
         if ($request->hasFile("upload")) {
-            $file = $request->file("upload");
+            $cloudinary = new Cloudinary();
+            $uploadApi = $cloudinary->uploadApi();
 
-            $filename = time() . '_' . $file->getClientOriginalName();
+            $uploadedFile = $uploadApi->upload($request->file("upload")->getRealPath(), [
+                "folder" => "custom-cms",
+            ]);
 
-            $path = $file->storeAs('public/images/posts', $filename);
-
-            $url = Storage::url($path);
-
-            return response()->json(["url" => $url]);
+            return response()->json(["url" => $uploadedFile->getSecurePath()]);
         }
 
         return response()->json(["error" => "No image uploaded"], 400);
