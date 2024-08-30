@@ -121,7 +121,7 @@
                                 {{$post->user->username}}
                             </h5>
                             <p class="text-sm text-gray-500 dark:text-neutral-500">
-                                {{$post->user->profile->first_name . ' ' . $post->user->profile->last_name}}
+                                {{$post->user->profile?->first_name . ' ' . $post->user->profile?->last_name}}
                             </p>
                         </a>
 
