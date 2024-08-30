@@ -5,6 +5,7 @@ namespace App\Traits\User;
 use App\Models\Notification;
 use App\Notifications\LikeNotification;
 use App\Notifications\NewPostNotification;
+use App\Notifications\FollowNotification;
 
 trait Notifications
 {
@@ -32,7 +33,8 @@ trait Notifications
 
     public function followNotifications()
     {
-        return $this->getAllNotifications();
+        return $this->getAllNotifications()
+            ->where("type", FollowNotification::class);
     }
 
     public function likeNotifications()

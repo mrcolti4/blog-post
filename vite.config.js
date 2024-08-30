@@ -13,6 +13,7 @@ export default defineConfig({
                 "resources/js/profile-slider.js",
                 "resources/js/swiper-bundle.min.js",
                 "resources/js/show-post.js",
+                'resources/js/follow.js'
             ],
             refresh: true,
         }),

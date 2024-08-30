@@ -25,6 +25,7 @@ class VoteController extends Controller
             // Get post or comment model
             // Get "like" or "dislike" event, default "like"
             $event = $request->input("event", "like");
+            // Check if user has already voted
             if (Activity::where("target_id", $id)
                 ->where("target_type", get_class($model))
                 ->where("user_id", $request->user()->id)

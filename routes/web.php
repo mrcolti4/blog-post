@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\actions\SubscriptionController as SubscriptionController;
+use App\Http\Controllers\actions\FollowController;
 use App\Http\Controllers\posts\CommentsController;
 use App\Http\Controllers\auth\ForgotPassword;
 use App\Http\Controllers\ImageUpload;
@@ -32,7 +32,7 @@ Route::get('/', function () {
     $popular_posts = Post::with("user")->orderBy("likes", "DESC")->paginate(3)->items();
 
     return view('welcome', [
-        "popular_posts" => $popular_posts
+        "popular_posts" => $popular_posts,
     ]);
 });
 
@@ -112,9 +112,9 @@ Route::name("users.")->prefix("users")->group(function () {
 });
 // Action controllers
 // Likes and dislikes
-Route::post("/vote/{type}/{id}", VoteController::class)->name("vote.index")->middleware("auth");
+Route::post("/vote/{type}/{id}", VoteController::class)->name("vote.index");
 // Follow user
-Route::post("/follow/{user}", SubscriptionController::class)->name("follow.index")->middleware("auth");
+Route::post("/follow/{user}", FollowController::class)->name("follow.index")->middleware("auth");
 
 Route::get("/upload-image", [ImageUpload::class]);
 

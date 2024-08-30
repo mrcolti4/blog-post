@@ -46,6 +46,6 @@
 </header>
 @auth
     <div>
-        {{auth()->user()->likeNotifications}}
+        {{auth()->user()->followNotifications}}
     </div>
 @endauth

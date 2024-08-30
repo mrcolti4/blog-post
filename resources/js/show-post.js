@@ -1,3 +1,5 @@
+import { DEFAULT_URL } from "./constants";
+
 const select = document.querySelector("select.comments-sort");
 const commentsList = document.querySelector("div.comments-list");
 const voteBtns = document.querySelectorAll("[data-vote-event]");
@@ -6,7 +8,7 @@ const comments = commentsList.querySelectorAll("div.comment");
 
 select.addEventListener("change", async function (e) {
     const sortType = this.value;
-    const url = `{{ url('posts/') }}/{{$post->id}}/comments/index?sort=${sortType}`;
+    const url = `${DEFAULT_URL}/posts/{{$post->id}}/comments/index?sort=${sortType}`;
     const response = await fetch(url);
 
     const data = await response.json();
@@ -21,7 +23,7 @@ voteBtns.forEach((btn) => {
         // Get the id for model
         const id = e.currentTarget.closest("[data-id]").dataset.id;
         // Create dynamic url
-        const url = `${window.location.protocol}//${window.location.host}/vote/${model}/${id}`;
+        const url = `${DEFAULT_URL}/vote/${model}/${id}`;
         const response = await fetch(url, {
             method: "POST",
             headers: {

@@ -2,23 +2,20 @@
 
 namespace App\Notifications;
 
-use App\Models\Comment;
-use App\Models\Post;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Notifications\DatabaseNotification;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class LikeNotification extends Notification
+class FollowNotification extends Notification
 {
     use Queueable;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct(public Post|Comment $target, public User $user)
+    public function __construct(public User $user)
     {
         //
     }
@@ -44,12 +41,23 @@ class LikeNotification extends Notification
                     ->line('Thank you for using our application!');
     }
 
-    public function toDatabase($notifiable): array
+    /**
+     * Get the array representation of the notification.
+     *
+     * @return array<string, mixed>
+     */
+    public function toArray(object $notifiable): array
     {
         return [
-            "target_id" => $this->target->id,
-            "target_type" => get_class($this->target),
-            "user_id" => $this->user->id,
+            //
+        ];
+    }
+
+    public function toDatabase(object $notifiable): array
+    {
+        return [
+            'message' => 'You have been followed',
+            'user_id' => $this->user->id,
         ];
     }
 }
