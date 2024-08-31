@@ -3,7 +3,7 @@
 @php
     $attrs = [
         "type" => "submit",
-        "class" => "block px-5 py-2.5 w-full font-semibold text-sm text-center bg-primary-default text-text rounded-5 transition hover:bg-primary-hover"
+        "class" => "block px-5 py-2.5 font-semibold text-sm text-center bg-primary-default text-text rounded-5 transition hover:bg-primary-hover"
     ];
     if(!empty($href)) {
         $attrs['href'] = $href;

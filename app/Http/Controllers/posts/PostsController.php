@@ -98,7 +98,7 @@ class PostsController extends Controller
         }
         try {
             $this->postService->destroy($post);
-            return back()->with("success", "You did delete the post");
+            return redirect()->to("/posts")->with("success", "You did delete the post");
         } catch (Exception $th) {
             return back()->with("error", $th->getMessage());
         } catch (ImageUploadException $th) {
