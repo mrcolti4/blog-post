@@ -41,30 +41,3 @@
         @enderror
     </div>
 </div>
-
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        choice = new Choices($refs.input, {
-            searchPlaceholderValue: '{{ $searchPlaceholderValue ?? '' }}' || null,
-            removeItemButton: true,
-            maxItemCount: Number(maxItemCount),
-            duplicateItemsAllowed: false,
-            // Since choices is an array no quotes is required
-            choices: {{ json_encode($choices ?? []) }}
-        });
-
-        if (isRemote) {
-            choice.setChoices(function() {
-                return fetch(endpoint)
-                .then(function(response) {
-                    return response.json();
-                })
-                .then(function(data) {
-                    return data.releases.map(function(release) {
-                    return { value: release.title, label: release.title };
-                    });
-                });
-            });
-        }
-    });
-</script>

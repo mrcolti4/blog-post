@@ -16,7 +16,7 @@ class PopularPostsController extends Controller
         $posts = Post::where('likes', '>', 100)->orderByDesc('likes')->with('user')->paginate(15);
 
         return view("app.posts.index", [
-            "posts" => $posts
+            "posts" => $posts,
         ]);
     }
 }

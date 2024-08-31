@@ -86,7 +86,7 @@ Route::name("posts.")->prefix("posts")->group(function () {
     Route::post("/store", [PostsController::class, "store"])->name("store")->middleware("auth");
 
     Route::prefix("{post}")->group(function () {
-        Route::get("/", [UsersPostsController::class, "show"])->name("show");
+        Route::get("/", [PostsController::class, "show"])->name("show");
         Route::name("comments.")->prefix("comments")->group(function () {
             Route::get("/index", [CommentsController::class, "index"])->name("index");
             Route::post("/store", [CommentsController::class, "store"])->name("store")->middleware("auth");

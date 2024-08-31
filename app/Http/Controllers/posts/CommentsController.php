@@ -38,12 +38,12 @@ class CommentsController extends Controller
     public function store(Request $request, Post $post)
     {
         $request->validate([
-            "body" => "required|string"
+            "body" => "required|string",
         ]);
 
         $post->comments()->create([
             "body" => $request->body,
-            "user_id" => Auth::user()->id
+            "user_id" => Auth::user()->id,
         ]);
 
         return back()->with("success", "You did comment this post");

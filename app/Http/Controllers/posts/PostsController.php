@@ -4,6 +4,7 @@ namespace App\Http\Controllers\posts;
 
 use App\Http\Controllers\Controller;
 use App\Models\Activity;
+use App\Models\Comment;
 use App\Models\Image;
 use App\Models\Post;
 use App\Models\User;
@@ -91,9 +92,19 @@ class PostsController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Request $request, Post $post)
     {
-        //
+        $otherPosts = Post::latest()
+            ->where("user_id", $post->user->id)
+            ->where("id", "!=", $post->id)
+            ->take(5)
+            ->get();
+        $comments = Comment::where("post_id", $post->id)
+            ->with("user.profile", "activities")
+            ->orderByDesc('created_at')
+            ->get();
+
+        return view("app.posts.show", compact("post", "otherPosts", "comments"));
     }
 
     /**
