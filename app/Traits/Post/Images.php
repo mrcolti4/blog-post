@@ -7,14 +7,14 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 trait Images
 {
-    public function posterImage()
+    public function poster_image()
     {
-        return $this->images()->where("type", "poster");
+        return $this->images()->where("alt", "poster");
     }
 
-    public function heroImage()
+    public function hero_image()
     {
-        return $this->images()->where("type", "hero");
+        return $this->images()->where("alt", "background");
     }
 
     public function images(): HasMany

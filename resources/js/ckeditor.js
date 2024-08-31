@@ -19,16 +19,4 @@ const hero = document.querySelector("img.hero_image");
 setListenerOnFileInput(poster, posterUpload);
 setListenerOnFileInput(hero, heroUpload);
 
-document.addEventListener("DOMContentLoaded", function () {
-    ClassicEditor.create(document.querySelector("#editor"), {
-        simpleUpload: {
-            uploadUrl: "/upload-image",
-            withCredentials: true,
-            headers: {
-                "X-CSRF-TOKEN": document
-                    .querySelector('meta[name="csrf-token"]')
-                    .getAttribute("content"),
-            },
-        },
-    });
-});
+window.ClassicEditor = ClassicEditor;

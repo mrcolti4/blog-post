@@ -2,8 +2,11 @@
 
 namespace App\Providers;
 
+use App\Models\Post;
+use App\Policies\PostPolicy;
 use App\Support\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -21,6 +24,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Gate::policy(Post::class, PostPolicy::class);
         Collection::macro('paginate', function($perPage, $total = null, $page = null, $pageName = 'page'): LengthAwarePaginator {
             $page = $page ?: LengthAwarePaginator::resolveCurrentPage($pageName);
 

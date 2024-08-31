@@ -1,12 +1,12 @@
-@props(['name', 'label', 'tag' => 'input'])
+@props(['name', 'label', 'tag' => 'input', 'value' => ''])
 
 @php
     $defaults = [
         'type' => 'text',
         'id' => $name,
         'name' => $name,
-        'class' => "block w-full py-2.5 text-sm rounded-5 text-dark-text shadow shadow-shadow-border focus:shadow-accent focus:shadow-lg transition border border-shadow-border focus:border-accent outline-none focus:ring-0",
-        'value' => old($name)
+        'class' => "block w-full py-2.5 dark:bg-gray-700 dark:text-text text-sm rounded-5 text-dark-text shadow focus:shadow-accent focus:shadow-lg transition border border-shadow-border focus:border-accent outline-none focus:ring-0",
+        'value' => $value ?? old($name)
     ];
 @endphp
 

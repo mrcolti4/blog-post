@@ -2,24 +2,22 @@
 
 namespace App\Http\Controllers\posts;
 
+use App\Exceptions\ImageUploadException;
+use App\Exceptions\PostNotCreatedException;
 use App\Http\Controllers\Controller;
-use App\Models\Activity;
-use App\Models\Comment;
-use App\Models\Image;
+use App\Http\Requests\PostRequest;
+use App\Models\Category;
 use App\Models\Post;
-use App\Models\User;
-use App\Notifications\NewPostNotification;
+use App\Services\PostService;
 use App\Services\UploadImageService;
-use Auth;
-use DB;
-use Illuminate\Http\Request;
-use Illuminate\View\View as View;
-use Notification;
+use Exception;
+use Illuminate\View\View;
 
 class PostsController extends Controller
 {
     public function __construct(
-        protected UploadImageService $service
+        protected UploadImageService $uploadImageService,
+        protected PostService $postService
     )
     {
     }
@@ -39,95 +37,72 @@ class PostsController extends Controller
      */
     public function create()
     {
-        return view("app.posts.create");
+        $categories = Category::all();
+        return view("app.posts.create", compact("categories"));
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(PostRequest $request)
     {
-        $user = Auth::user();
-
-        $attrs = $request->validate([
-            'title' => 'required',
-            'poster_image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'hero_image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-            "content" => "required"
-        ]);
-        $followers = $user->followers()->get();
-        DB::beginTransaction();
-
         try {
-            $post = $user->posts()->create([
-                "title" => $attrs["title"],
-                "body" => $attrs["content"],
-                "category_id" => 1,
-            ]);
-
-            $posterImage = $this->service->upload($request->file('poster_image'), "poster");
-            $heroImage = $this->service->upload($request->file('hero_image'), "background");
-
-            $post->images()->createMany([
-                $posterImage,
-                $heroImage,
-            ]);
-
-            $post->hero_image = $heroImage["url"];
-            $post->poster_image = $posterImage["url"];
-            $post->save();
-
-            DB::commit();
-            Notification::send($followers, new NewPostNotification($post));
-
-            return back()->with("success", "You did publish the post");
-        } catch (\Throwable $th) {
-            DB::rollBack();
-            dd($th->getMessage());
-
-            return back()->with("error", "Something went wrong");
+            $this->postService->store($request);
+            return back()->with("success", "You did create the post");
+        } catch (PostNotCreatedException $th) {
+            return back()->with("error", $th->getMessage());
         }
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Request $request, Post $post)
+    public function show(Post $post)
     {
-        $otherPosts = Post::latest()
-            ->where("user_id", $post->user->id)
-            ->where("id", "!=", $post->id)
-            ->take(5)
-            ->get();
-        $comments = Comment::where("post_id", $post->id)
-            ->with("user.profile", "activities")
-            ->orderByDesc('created_at')
-            ->get();
-
-        return view("app.posts.show", compact("post", "otherPosts", "comments"));
+        return view("app.posts.show", $this->postService->show($post));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Post $post)
     {
-        //
+        if (request()->user()->cannot('update', $post)) {
+            abort(403);
+        }
+
+        $categories = Category::all();
+        return view("app.posts.edit", compact("categories", "post"));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(PostRequest $request, Post $post)
     {
-        //
+        try {
+            $this->postService->update($request, $post);
+            return back()->with("success", "You did update the post");
+        } catch (\Throwable $th) {
+            return back()->with("error", $th->getMessage());
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Post $post)
     {
-        //
+        if (request()->user()->cannot('delete', $post)) {
+            return back()->with("error", "You can't delete this post");
+        }
+        try {
+            $this->postService->destroy($post);
+            return back()->with("success", "You did delete the post");
+        } catch (Exception $th) {
+            return back()->with("error", $th->getMessage());
+        } catch (ImageUploadException $th) {
+            return back()->with("error", $th->getMessage());
+        }
     }
 }

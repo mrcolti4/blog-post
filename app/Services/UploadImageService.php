@@ -2,7 +2,10 @@
 
 namespace App\Services;
 
+use App\Models\Image;
 use Cloudinary\Cloudinary;
+use Cloudinary\Api\Exception\ApiError;
+use App\Exceptions\ImageUploadException;
 
 class UploadImageService
 {
@@ -10,6 +13,7 @@ class UploadImageService
     {
         $cloudinary = new Cloudinary();
         $uploadApi = $cloudinary->uploadApi();
+        $uploadedFile = null;
         try {
             $uploadedFile = $uploadApi->upload($file->getRealPath(), [
                 "folder" => "custom-cms",
@@ -25,9 +29,24 @@ class UploadImageService
                 "public_id" => $publicId,
                 "file_name" => $fileName,
             ];
-        } catch (\Throwable $th) {
-            //throw $th;
-            dd($th->getMessage());
+        } catch (ApiError $th) {
+            throw ImageUploadException("Failed to upload image", $th);
+        }
+    }
+
+    public function destroy($publicId)
+    {
+        $cloudinary = new Cloudinary();
+        $uploadApi = $cloudinary->uploadApi();
+        try {
+            //code...
+            $message = $uploadApi->destroy($publicId);
+
+            Image::where("public_id", $publicId)->delete();
+
+            return $message;
+        } catch (ApiError $th) {
+            throw ImageUploadException("Failed to destroy image", $th);
         }
     }
 }
