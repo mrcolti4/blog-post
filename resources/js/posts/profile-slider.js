@@ -9,5 +9,4 @@ document.addEventListener("DOMContentLoaded", function () {
             prevEl: ".swiper-button-prev",
         },
     });
-    console.log(swiper);
 });

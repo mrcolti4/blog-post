@@ -1,5 +1,5 @@
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
-import "../css/ckeditor-dark.css";
+import "../../css/ckeditor-dark.css";
 
 function setListenerOnFileInput(preview, input) {
     input.addEventListener("change", function (e) {

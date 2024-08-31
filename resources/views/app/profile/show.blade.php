@@ -81,9 +81,5 @@
     @endif
 </section>
 @endsection
-@vite('resources/js/profile-slider.js')
+@vite('resources/js/posts/profile-slider.js')
 @vite('resources/js/swiper-bundle.min.js')
-@section('scripts')
-    <script src="{{ asset('js/swiper-bundle.min.js') }}"></script>
-    <script src="{{ asset('js/profile-slider.js') }}"></script>
-@endsection

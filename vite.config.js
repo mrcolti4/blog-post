@@ -8,13 +8,13 @@ export default defineConfig({
                 "resources/css/app.css",
                 "resources/css/ckeditor-dark.css",
                 "resources/js/app.js",
-                "resources/js/ckeditor.js",
-                "resources/js/comments-sort.js",
-                "resources/js/profile-slider.js",
+                "resources/js/posts/ckeditor.js",
+                "resources/js/posts/comments-sort.js",
+                "resources/js/posts/profile-slider.js",
                 "resources/js/swiper-bundle.min.js",
-                "resources/js/show-post.js",
+                "resources/js/posts/show-post.js",
                 'resources/js/follow.js',
-                'resources/js/modal.js'
+                'resources/js/posts/modal.js'
             ],
             refresh: true,
         }),

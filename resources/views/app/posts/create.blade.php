@@ -42,4 +42,4 @@
 </script>
 @endsection
 
-@vite(['resources/js/ckeditor.js'])
+@vite(['resources/js/posts/ckeditor.js'])

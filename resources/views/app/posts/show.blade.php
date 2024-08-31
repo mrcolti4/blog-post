@@ -125,7 +125,7 @@
     </article>
     <!-- End Blog Article -->
 </section>
-@vite('resources/js/modal.js')
-@vite('resources/js/show-post.js')
+@vite('resources/js/posts/modal.js')
+@vite('resources/js/posts/show-post.js')
 @vite('resources/js/follow.js')
 @endsection

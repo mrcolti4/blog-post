@@ -1,4 +1,4 @@
-import { DEFAULT_URL } from "./constants";
+import { DEFAULT_URL } from "../constants";
 
 const select = document.querySelector("select.comments-sort");
 const commentsList = document.querySelector("div.comments-list");
