@@ -5,7 +5,7 @@
         <x-form.form action="{{ route('password.email') }}" method="POST">
             <x-form.title>Reset password form</x-form>
             <x-form.input name="email" type="email" label="Enter your email"/>
-            <x-form.button>Reset password</x-form>
+            <x-form.button class="w-full">Reset password</x-form>
             <x-form.link href="{{ route('login') }}" class="mb-5">Login</x-form>
         </x-form>
     </section>

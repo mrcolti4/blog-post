@@ -12,6 +12,7 @@ use App\Http\Controllers\auth\SessionController;
 use App\Http\Controllers\auth\RegisteredController;
 use App\Http\Controllers\auth\UpdatePassword;
 use App\Http\Controllers\actions\VoteController;
+use App\Http\Controllers\NotificationsController;
 use App\Http\Controllers\users\UsersController;
 use App\Http\Controllers\posts\UsersPostsController;
 use App\Models\Post;
@@ -120,6 +121,8 @@ Route::name("users.")->prefix("users")->group(function () {
 Route::post("/vote/{type}/{id}", VoteController::class)->name("vote.index");
 // Follow user
 Route::post("/follow/{user}", FollowController::class)->name("follow.index")->middleware("auth");
+// Mark as read notification
+Route::post("notifications/mark-as-read", NotificationsController::class)->name("notifications.markAsRead")->middleware("auth");
 
 Route::get("/upload-image", [ImageUpload::class]);
 

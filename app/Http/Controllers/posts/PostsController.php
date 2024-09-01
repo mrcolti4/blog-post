@@ -2,21 +2,22 @@
 
 namespace App\Http\Controllers\posts;
 
+use App\DTOs\PostDto;
+use App\Exceptions\CannotUpdatePostException;
 use App\Exceptions\ImageUploadException;
 use App\Exceptions\PostNotCreatedException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PostRequest;
+use App\Http\Requests\UpdatePostRequest;
 use App\Models\Category;
 use App\Models\Post;
 use App\Services\PostService;
-use App\Services\UploadImageService;
 use Exception;
 use Illuminate\View\View;
 
 class PostsController extends Controller
 {
     public function __construct(
-        protected UploadImageService $uploadImageService,
         protected PostService $postService
     )
     {
@@ -26,10 +27,7 @@ class PostsController extends Controller
      */
     public function index(): View
     {
-        $posts = Post::latest()->with('user')->paginate(12);
-        $posts->onEachSide(3);
-
-        return view("app.posts.index", compact("posts"));
+        return view("app.posts.index", $this->postService->index());
     }
 
     /**
@@ -37,8 +35,7 @@ class PostsController extends Controller
      */
     public function create()
     {
-        $categories = Category::all();
-        return view("app.posts.create", compact("categories"));
+        return view("app.posts.create", $this->postService->create());
     }
 
     /**
@@ -47,8 +44,9 @@ class PostsController extends Controller
     public function store(PostRequest $request)
     {
         try {
-            $this->postService->store($request);
-            return back()->with("success", "You did create the post");
+            $post = $this->postService->store(PostDto::fromApp($request));
+            return redirect()->route("posts.show", ["post" => $post->id])
+            ->with("success", "You did create the post");
         } catch (PostNotCreatedException $th) {
             return back()->with("error", $th->getMessage());
         }
@@ -67,24 +65,21 @@ class PostsController extends Controller
      */
     public function edit(Post $post)
     {
-        if (request()->user()->cannot('update', $post)) {
-            abort(403);
-        }
-
-        $categories = Category::all();
-        return view("app.posts.edit", compact("categories", "post"));
+        return view("app.posts.edit", $this->postService->edit($post));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(PostRequest $request, Post $post)
+    public function update(UpdatePostRequest $request, Post $post)
     {
         try {
-            $this->postService->update($request, $post);
+            $this->postService->update(PostDto::fromApp($request), $post);
             return back()->with("success", "You did update the post");
-        } catch (\Throwable $th) {
+        } catch (CannotUpdatePostException $th) {
             return back()->with("error", $th->getMessage());
+        } catch (\Throwable $th) {
+            return back()->with("error", $th);
         }
     }
 
@@ -98,7 +93,8 @@ class PostsController extends Controller
         }
         try {
             $this->postService->destroy($post);
-            return redirect()->to("/posts")->with("success", "You did delete the post");
+            return redirect()->route("posts.index")
+                ->with("success", "You did delete the post");
         } catch (Exception $th) {
             return back()->with("error", $th->getMessage());
         } catch (ImageUploadException $th) {

@@ -1,4 +1,4 @@
-@extends('layouts.base')
+@extends('layouts.home')
 
 @push('header')
     <x-header/>

@@ -56,8 +56,9 @@ class NewPostNotification extends Notification
     public function toDatabase(object $notifiable): array
     {
         return [
-            "title" => $this->post->title,
-            "author" => $this->post->user,
+            "message" => "{$this->post->user->username} published a new post",
+            "user_id" => $this->post->user->id,
+            "user_image" => $this->post->user->profile->image,
         ];
     }
 }

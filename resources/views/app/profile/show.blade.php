@@ -24,9 +24,11 @@
         <x-user.panel>
             <x-user.title>{{ucfirst($user->username)}} follows this people</x-user>
             <div class="flex items-center gap-8">
-                @foreach($user->followers as $follower)
+                @forelse($user->followers as $follower)
                     <x-avatar-card :user="$follower" />
-                @endforeach
+                    @empty
+                        <h2 class="ml-5 text-2xl font-Shantell">Not following anyone</h2>
+                @endforelse
             </div>
         </x-user>
         <x-user.panel>

@@ -17,7 +17,8 @@ trait Activities
     public function followers()
     {
         return $this->morphedByMany(User::class, 'target', 'activities', 'target_id', 'user_id')
-            ->where('action_type', 'follow');
+            ->where('action_type', 'follow')
+            ->where('user_id', $this->id);
     }
 
     public function favoritePosts()

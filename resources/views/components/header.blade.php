@@ -16,7 +16,7 @@
                     <x-nav-link href="{{ route('register.create') }}">Register</x-nav-link>
                 @endguest
                 @auth
-                <div class="md:ml-20 relative">
+                <li class="md:ml-20 relative">
                     <button data-event="toggle-profile-menu" aria-expanded="false" aria-haspopup="menu">
                         <i class="fa-regular fa-user text-xl"></i>
                     </button>
@@ -27,25 +27,27 @@
                         <x-nav-link>
                             <x-form.form method="POST" action="/login" class="lg:w-auto">
                                 @method("DELETE")
-                                <x-form.button class="w-[150px]" tag="button">
+                                <x-form.button tag="button">
                                     Logout
                                 </x-form>
                             </x-form>
                         </x-nav-link>
                     </ul>
-                </div>
-                <div>
-                    <button>
+                </li>
+                <li class="relative">
+                    <button data-event="toggle-notifications">
                         <i class="fa-regular fa-bell text-xl"></i>
                     </button>
-                </div>
+                    <div class="notifications hidden absolute top-8 right-0 bg-secondary rounded-xl p-5 w-80 gap-4">
+                        @forelse(auth()->user()->unreadNotifications as $notification)
+                            <x-header.notification :notification="$notification"/>
+                            @empty
+                            <h3 class="text-gray-400">No notifications yet</h3>
+                        @endforelse
+                    </div>
+                </li>
                 @endauth
             </ul>
         </nav>
     </div>
 </header>
-@auth
-    <div>
-        {{auth()->user()->followNotifications}}
-    </div>
-@endauth

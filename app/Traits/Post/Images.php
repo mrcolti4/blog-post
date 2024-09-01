@@ -9,12 +9,12 @@ trait Images
 {
     public function poster_image()
     {
-        return $this->images()->where("alt", "poster");
+        return $this->images()->where("type", "poster");
     }
 
     public function hero_image()
     {
-        return $this->images()->where("alt", "background");
+        return $this->images()->where("type", "hero");
     }
 
     public function images(): HasMany

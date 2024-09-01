@@ -7,7 +7,7 @@
             <x-form.input name="username" label="Username" placeholder="Enter your username"/>
             <x-form.input name="password" type="password" label="Password" placeholder="Enter your password"/>
             <x-form.link href="{{ route('password.email' ) }}">Forgot password?</x-form>
-            <x-form.button>Sign in</x-form>
+            <x-form.button class="w-full">Sign in</x-form>
             <x-form.link href="{{ route('register.create') }}">First time here? Sign up</x-form>
         </x-form>
     </div>

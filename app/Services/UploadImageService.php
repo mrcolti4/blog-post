@@ -6,6 +6,7 @@ use App\Models\Image;
 use Cloudinary\Cloudinary;
 use Cloudinary\Api\Exception\ApiError;
 use App\Exceptions\ImageUploadException;
+use Cloudinary\Api\Admin\AdminApi;
 
 class UploadImageService
 {
@@ -28,23 +29,20 @@ class UploadImageService
                 "alt" => $alt,
                 "public_id" => $publicId,
                 "file_name" => $fileName,
+                "type" => $alt
             ];
         } catch (ApiError $th) {
             throw ImageUploadException("Failed to upload image", $th);
         }
     }
 
-    public function destroy($publicId)
+    public function destroy(array $publicIds)
     {
-        $cloudinary = new Cloudinary();
-        $uploadApi = $cloudinary->uploadApi();
+        // $uploadApi = $cloudinary->uploadApi();
+        $api = new AdminApi();
         try {
-            //code...
-            $message = $uploadApi->destroy($publicId);
-
-            Image::where("public_id", $publicId)->delete();
-
-            return $message;
+            $api->deleteAssets($publicIds);
+            Image::whereIn("public_id", $publicIds)->delete();
         } catch (ApiError $th) {
             throw ImageUploadException("Failed to destroy image", $th);
         }

@@ -41,23 +41,12 @@ class FollowNotification extends Notification
                     ->line('Thank you for using our application!');
     }
 
-    /**
-     * Get the array representation of the notification.
-     *
-     * @return array<string, mixed>
-     */
-    public function toArray(object $notifiable): array
-    {
-        return [
-            //
-        ];
-    }
-
     public function toDatabase(object $notifiable): array
     {
         return [
-            'message' => 'You have been followed',
-            'user_id' => $this->user->id,
+            "message" => "{$this->user->username} followed you",
+            "user_id" => $this->user->id,
+            "user_profile" => $this->user->profile(),
         ];
     }
 }

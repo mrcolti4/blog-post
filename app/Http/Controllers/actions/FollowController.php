@@ -27,6 +27,14 @@ class FollowController extends Controller
         }
 
         try {
+            // Check if notification was sent before
+            $hasNotification = Notification::where("notifiable_id", $user->id)
+                ->where("type", FollowNotification::class)
+                ->exists();
+
+            if (!$hasNotification) {
+                $user->notify(new FollowNotification(auth()->user()));
+            }
             // Follow user
             Activity::updateOrInsert([
                 "user_id" => auth()->id(),
@@ -34,14 +42,6 @@ class FollowController extends Controller
                 "target_id" => $user->id,
                 "target_type" => get_class($user),
             ]);
-            // Check if notification was sent before
-            $hasNotification = Notification::where("notifiable_id", $user->id)
-                ->where("type", FollowNotification::class)
-                ->exists();
-            if (!$hasNotification) {
-                // Send notification
-                $user->notify(new FollowNotification(auth()->user()));
-            }
             // Return success
             return response()->json(["message" => "You followed {$user->username}"], 200);
         } catch (\Throwable $th) {

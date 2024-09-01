@@ -2,10 +2,13 @@
 
 namespace App\Services;
 
+use App\DTOs\PostDto;
+use App\Exceptions\CannotUpdatePostException;
 use App\Exceptions\ImageUploadException;
 use App\Exceptions\PostNotCreatedException;
 use Exception;
 use App\Http\Requests\PostRequest;
+use App\Models\Category;
 use App\Models\Post;
 use App\Models\User;
 use Notification;
@@ -23,6 +26,20 @@ class PostService
     {
     }
 
+    public function index(): array
+    {
+        $posts = Post::latest()->with('user')->paginate(12);
+        $posts->onEachSide(3);
+
+        return compact('posts');
+    }
+
+    public function create(): array
+    {
+        $categories = Category::all();
+        return compact('categories');
+    }
+
     public function show(Post $post): array
     {
         $post->load(['user.profile', 'comments.user.profile', 'comments.activities']);
@@ -34,23 +51,20 @@ class PostService
         ];
     }
 
-    public function store(PostRequest $request): void
+    public function store(PostDto $dto): Post
     {
         $user = Auth::user();
-
-        $attrs = $request->validate();
-
         DB::beginTransaction();
 
         try {
             $post = $user->posts()->create([
-                "title" => $attrs["title"],
-                "body" => $attrs["content"],
-                "category_id" => $attrs["category_id"],
+                "title" => $dto->title,
+                "body" => $dto->body,
+                "category_id" => $dto->category_id,
             ]);
             // Upload images on Cloudinary
-            $posterImage = $this->uploadImageService->upload($request->file('poster_image'), "poster");
-            $heroImage = $this->uploadImageService->upload($request->file('hero_image'), "background");
+            $posterImage = $this->uploadImageService->upload($dto->poster_image, "poster");
+            $heroImage = $this->uploadImageService->upload($dto->hero_image, "hero");
 
             // Create images related to current post
             $post->images()->createMany([
@@ -65,40 +79,57 @@ class PostService
             $this->notifyFollowers($user, $post);
 
             DB::commit();
+            return $post;
         } catch (QueryException $th) {
             DB::rollBack();
+            // Delete images from Cloudinary
             $this->uploadImageService->destroy($posterImage["public_id"]);
             $this->uploadImageService->destroy($heroImage["public_id"]);
             throw PostNotCreatedException('Post was not created', $th);
         }
     }
-    public function update(PostRequest $request, Post $post): void
+
+    public function edit(Post $post): array
+    {
+        if (request()->user()->cannot('update', $post)) {
+            throw CannotUpdatePostException("You cannot update this post", 403);
+        }
+        $categories = Category::all();
+        return compact('post', 'categories');
+    }
+
+    public function update(PostDto $dto, Post $post): void
     {
         // If user can't update post, abort
         if (request()->user()->cannot('update', $post)) {
-            abort(403);
+            throw CannotUpdatePostException("You cannot update this post", 403);
         }
-        // Validate request
-        $attrs = $request->validate();
 
         // If user upload file, delete on Cloudinary, from database and upload new one
-        if ($request->hasFile("hero_image")) {
-            $this->updateImage($request, $post, "hero_image", "background");
+        if ($dto->hero_image) {
+            $this->updateImage($dto, $post, "hero_image", "background");
         }
-        if ($request->hasFile("poster_image")) {
-            $this->updateImage($request, $post, "poster_image", "poster");
+        if ($dto->poster_image) {
+            $this->updateImage($dto, $post, "poster_image", "poster");
         }
 
         // Update post
-        $post->update($attrs);
+        $post->update([
+            "title" => $dto->title,
+            "body" => $dto->body,
+            "category_id" => $dto->category_id,
+        ]);
     }
 
     public function destroy(Post $post): void
     {
         try {
+            // Get all image ids reltated to post
+            $publicIds = $post->images()->pluck("public_id")->toArray();
+            // Delete images from Cloudinary
+            $this->uploadImageService->destroy($publicIds);
+            // Delete post
             $post->delete();
-            $this->uploadImageService->destroy($post->hero_image->public_id);
-            $this->uploadImageService->destroy($post->poster_image->public_id);
         } catch (QueryException $th) {
             throw Exception("Post was not deleted", $th);
         } catch (ApiError $th) {
@@ -123,13 +154,15 @@ class PostService
             ->paginate(5);
     }
 
-    private function updateImage(PostRequest $request, Post $post, $imageType, $alt): void
+    private function updateImage(PostDto $dto, Post $post, $imageType, $alt): void
     {
         try {
             // Upload new image
-            $image = $this->uploadImageService->upload($request->file($imageType), $alt);
+            $image = $this->uploadImageService->upload($dto->$imageType, $alt);
             // Delete old image from Cloudinary
-            $oldImage = $post->$imageType;
+            $oldImage = $post->images()
+                ->where("type", $imageType === "hero_image" ? "background" : "poster")
+                ->first();
             $this->uploadImageService->destroy($oldImage->public_id);
             // Change image url in database
             $post->$imageType = $image["url"];

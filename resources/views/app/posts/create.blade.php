@@ -13,11 +13,11 @@
             {{$error}}
         @endforeach
             <x-form.input name="title" label="Enter your post title" />
-            <x-form.select name="category" label="Select category" :options="$categories" />
+            <x-form.select name="category_id" label="Select category" :options="$categories" />
             <x-user.upload-img label="This image will appear on posts page" name="poster_image" size="poster"/>
             <x-user.upload-img label="This image will appear on top of page of your post" name="hero_image" size="background"/>
             <div class="dark-theme-editor">
-                <textarea id="editor" name="content"></textarea>
+                <textarea id="editor" name="body"></textarea>
             </div>
             <x-form.button class="mt-20">Create post</x-form>
         </x-form>
